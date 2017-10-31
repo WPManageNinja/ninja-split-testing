@@ -37,5 +37,34 @@ class Helper {
 
 		return $ip;
 	}
+
+	public static function getAssetsDirUrl() {
+		return plugin_dir_url( __DIR__ );
+	}
+
+	public static function getViewsDir() {
+		return plugin_dir_path( __DIR__ ) . 'views/';
+	}
+
+	public static function getViewFile( $file ) {
+		return static::getViewsDir() . $file . '.php';
+	}
+
+	public static function getAssetDirUrl() {
+		return static::getAssetsDirUrl() . 'assets/';
+	}
+
+	public static function getAssetImage( $file ) {
+		return static::getAssetDirUrl() . 'img/' . $file;
+	}
+
+	public static function loadViewFile($file, $data = []) {
+		extract($data);
+		ob_start();
+		require static::getViewFile($file);
+		$return = ob_get_contents();
+		ob_clean();
+		return $return;
+	}
 	
 }
