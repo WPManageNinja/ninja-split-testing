@@ -13,6 +13,7 @@
 
 // Exit if accessed directly
 use NinjaABClass\classes\Redirect;
+use NinjaABClass\classes\AdminHooks;
 
 if( !defined( 'ABSPATH' ) ) {
 	die;
@@ -35,7 +36,8 @@ if(!class_exists('NinjaSplitTesting')) {
 		}
 		
 		public function adminActions() {
-			
+			$adminHooks = new AdminHooks();
+			add_action('admin_menu', array($adminHooks, 'adminMenu'));
 		}
 	}
 	
