@@ -14,6 +14,7 @@ class AdminHooks {
 		add_submenu_page('ninja-split-testing','Add Campaign','Add Campaign','manage_options','add-campaign', array($this, 'showAddCampaign'));
 		add_submenu_page('ninja-split-testing','Settings','Settings','manage_options','settings', array($this, 'showSettingsPage'));
 		add_submenu_page('ninja-split-testing','Help','Help','manage_options','help', array($this, 'showHelpPage'));
+		remove_submenu_page('ninja-split-testing', 'ninja-split-testing');
 	}
 
 	public function showMainPage()
