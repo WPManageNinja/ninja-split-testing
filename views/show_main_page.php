@@ -1,2 +1,2 @@
-<?php
-echo 'show main page';
+<div id="nst-app">
+</div>
