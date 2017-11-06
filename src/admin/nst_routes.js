@@ -6,6 +6,10 @@ const NstAddCampaign = require('./components/NstAddCampaign.vue');
 const NstSettings = require('./components/NstSettings.vue');
 const NstHelp = require('./components/NstHelp.vue');
 const NstAllCampaign = require('./components/NstAllCampaign.vue');
+const NstViewCampaignHome = require('./components/nstViewCampaignHome.vue');
+const NstViewCampaignTestingPage = require('./components/NstViewCampaignTestingPage.vue');
+const NstViewCampaignAnalyticsPage = require('./components/NstViewCampaignAnalytics.vue');
+const NstViewCampaignSettingsPage = require('./components/NstViewCampaignSettings.vue');
 
 /**
  * Exporting Routes
@@ -17,7 +21,7 @@ export const routes = [
 		props: true,
 		children: [
 			{
-				path: '/',
+				path: '',
 				name: 'nst_home',
 				component: NstAllCampaign,
 				props: true,
@@ -42,5 +46,30 @@ export const routes = [
 			}
 		]
 	},
+	{
+		path: '/',
+		component: NstViewCampaignHome,
+		props: true,
+		children: [
+			{
+				path: '/view-campaign/:id/testing-pages',
+				name: 'nst_view_testing_page',
+				component: NstViewCampaignTestingPage,
+				props: true
+			},
+			{
+				path: '/view-campaign/:id/analytics',
+				name: 'nst_view_analytics_page',
+				component: NstViewCampaignAnalyticsPage,
+				props: true
+			},
+			{
+				path: '/view-campaign/:id/settings',
+				name: 'nst_view_settings_page',
+				component: NstViewCampaignSettingsPage,
+				props: true
+			},
+		]
+	}
 	
 ];

@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter);
 
+import VueQuillEditor from 'vue-quill-editor';
+Vue.use(VueQuillEditor);
+
 import 'element-ui/lib/theme-default/table.css'
 import 'element-ui/lib/theme-default/popover.css'
 import 'element-ui/lib/theme-default/loading.css'
@@ -14,9 +17,22 @@ import 'element-ui/lib/theme-default/collapse-item.css'
 import 'element-ui/lib/theme-default/dialog.css'
 import 'element-ui/lib/theme-default/menu.css'
 import 'element-ui/lib/theme-default/menu-item.css'
+import 'element-ui/lib/theme-default/button.css'
+import 'element-ui/lib/theme-default/form.css'
+import 'element-ui/lib/theme-default/form-item.css'
+import 'element-ui/lib/theme-default/input.css'
+import 'element-ui/lib/theme-default/icon.css'
+import 'element-ui/lib/theme-default/select.css'
+import 'element-ui/lib/theme-default/option.css'
+import 'element-ui/lib/theme-default/card.css'
+import 'element-ui/lib/theme-default/row.css'
+import 'element-ui/lib/theme-default/col.css'
+import 'element-ui/lib/theme-default/alert.css'
+
 import {
     Table, TableColumn, Dialog, Popover, Loading, Message, MessageBox, Icon,Tooltip,
-    Pagination, Collapse, CollapseItem, Menu, MenuItem
+    Pagination, Collapse, CollapseItem, Menu, MenuItem, Button,  Form, Input, Select,
+  	FormItem, Option, Card,Row,Col, Alert
 } from 'element-ui';
 
 import lang from 'element-ui/lib/locale/lang/en'
@@ -34,8 +50,18 @@ Vue.use(Tooltip);
 Vue.use(Collapse);
 Vue.use(CollapseItem);
 Vue.use(Dialog);
-Vue.use(Menu)
-Vue.use(MenuItem)
+Vue.use(Menu);
+Vue.use(MenuItem);
+Vue.use(Button);
+Vue.use(Form);
+Vue.use(FormItem);
+Vue.use(Input);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(Card);
+Vue.use(Row);
+Vue.use(Col);
+Vue.use(Alert);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$msgbox = MessageBox;
