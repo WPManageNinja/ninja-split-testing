@@ -1,0 +1,65 @@
+@import "./_element_icons.css";
+
+.inline-block {
+	display: inline-block;
+}
+
+.action {
+	cursor: pointer;
+	&:hover {
+		color: #20a0ff;
+	}
+}
+
+.el-message {
+	margin-top: 15px;
+}
+
+.m-t-10 {
+	margin-top: 10px;
+}
+
+.m-t-20 {
+	margin-top: 20px;
+}
+
+.m-t-35 {
+	margin-top: 35px;
+}
+
+.m-l-20 {
+	margin-left: 20px;
+}
+.m-l-10 {
+	margin-right: 10px;
+}
+.m-b-10 {
+	margin-bottom: 10px; 
+}
+
+.m-b-20 {
+	margin-bottom: 20px; 
+}
+
+.f-s-120 {
+	font-size: 120px;
+}
+
+.center {
+	text-align: center;
+}
+
+.ql-container.ql-snow {
+  min-height: 220px;
+}
+
+/*----view campain setting page-----*/
+.heading {
+    p {
+    	font-weight: 400;
+	    color: #1f2f3d;
+	    font-size: 24px;
+    	margin: 0px;
+    	text-align: center;
+    }
+}

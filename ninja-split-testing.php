@@ -38,7 +38,7 @@ if(!class_exists('NinjaSplitTesting')) {
 		public function adminActions() {
 			$adminHooks = new AdminHooks();
 			add_action('admin_menu', array($adminHooks, 'adminMenu'));
-			add_action('wp_ajax_nst_get_main_page', array($adminHooks, 'getMainPageData'));
+			add_action('wp_ajax_routes', array($adminHooks, 'ajax_routes'));
 		}
 	}
 	

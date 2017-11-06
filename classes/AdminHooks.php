@@ -50,6 +50,7 @@ class AdminHooks {
 	public function enqueue_nst_scripts()
 	{
 		$this->enqueue_scripts();
+		$this->enqueue_styles();
 	}
 
 	public function enqueue_scripts()
@@ -61,16 +62,97 @@ class AdminHooks {
 		);
 	}
 
-	/**
-	 * Testing
-	 */
-	public function getMainPageData()
+	public function enqueue_styles()
 	{
-		$data = [
-			'posts' => ninjaDB('posts')->where('post_type', '=', 'post')->get()
-		];
-		wp_send_json_success($data, 200);
-		exit;
+		wp_enqueue_style(
+			'ninja_split_testing',
+			Helper::getAssetDirUrl().'css/ninja-split-testing.min.css'
+		);
 	}
-	
+
+
+	public function ajax_routes() {
+		if ( ! current_user_can( 'manage_options') ) {
+			return;
+		}
+
+		$valid_routes = array(
+			'add-campaign'  		=> 'addCampaign',
+			'get-all-campaign'  	=> 'getAllCampaign',
+			'get-campaign-by-id' 	=> 'getCampaignByID',
+			'add-campaign-post-id'	=> 'addCampaignPostID',
+			'get-all-post-and-pages'=> 'getAllPostAndPages'
+		);
+
+		$requested_route = $_REQUEST['target_action'];
+
+		if ( isset( $valid_routes[ $requested_route ] ) ) {
+			$this->{$valid_routes[ $requested_route ]}();
+		}
+
+		wp_die();
+	}
+
+
+	public function addCampaign() {
+
+		if ( ! $_REQUEST['title'] ) {
+			wp_send_json_error( array(
+				'message' => __( 'The title field is required.', 'ninja-split-testing' )
+			), 423 );
+			die();
+		}
+
+		$title = sanitize_text_field($_REQUEST['title']);
+
+		if (! $title) {
+			wp_send_json_error( array(
+				'message' => __( 'Please give text only', 'ninja-split-testing' )
+			), 423 );
+			die();
+		}
+
+		$data = array(
+		    'id' => isset($_REQUEST['id']) ? $_REQUEST['id'] : NULL,
+		    'title' => $title,
+		    'description' => wp_kses_post($_REQUEST['description'])
+		);
+
+		Queries::store('nst_campaigns', $data);
+	}
+
+	public function addCampaignPostID() {
+		if( !$_REQUEST['post_id']) {
+			wp_send_json_error( array(
+				'message' => __( 'Please Select Any Post or Page', 'ninja-split-testing')
+			), 423);
+			die();
+		}
+
+		$data = [
+			'id' => (int) $_REQUEST['id'],
+			'post_id' => (int) $_REQUEST['post_id']
+		];
+
+		Queries::storePostID('nst_campaigns', $data);
+	}
+
+	public function getAllCampaign() {
+		Queries::getAllData('nst_campaigns');
+	}
+
+	public function getCampaignByID() {
+		Queries::getSingleData('nst_campaigns', $_REQUEST['campaign_id']);
+	}
+
+	public function getAllPostAndPages() {
+		
+		$args = [
+			'post_type' => $_REQUEST['post_type']
+		];
+
+		$data = get_posts($args);
+
+		wp_send_json_success($data, 200);
+	}
 }
