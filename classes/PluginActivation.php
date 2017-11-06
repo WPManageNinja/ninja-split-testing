@@ -20,6 +20,7 @@ class PluginActivation {
 				cookie_status ENUM('yes','no') DEFAULT 'yes',
 				description TEXT,
 				post_id int(11) NOT NULL,
+				target_url VARCHAR (255) NULL,
 				created_by int(11),
 				status ENUM('active','draft','archived') DEFAULT 'draft',
 				conditions TEXT,
