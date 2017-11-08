@@ -28,11 +28,13 @@ import 'element-ui/lib/theme-default/card.css'
 import 'element-ui/lib/theme-default/row.css'
 import 'element-ui/lib/theme-default/col.css'
 import 'element-ui/lib/theme-default/alert.css'
+import 'element-ui/lib/theme-default/slider.css'
+import 'element-ui/lib/theme-default/switch.css'
 
 import {
     Table, TableColumn, Dialog, Popover, Loading, Message, MessageBox, Icon,Tooltip,
     Pagination, Collapse, CollapseItem, Menu, MenuItem, Button,  Form, Input, Select,
-  	FormItem, Option, Card,Row,Col, Alert
+  	FormItem, Option, Card,Row,Col, Alert, Slider, Switch
 } from 'element-ui';
 
 import lang from 'element-ui/lib/locale/lang/en'
@@ -62,6 +64,8 @@ Vue.use(Card);
 Vue.use(Row);
 Vue.use(Col);
 Vue.use(Alert);
+Vue.use(Slider);
+Vue.use(Switch);
 
 Vue.prototype.$message = Message;
 Vue.prototype.$msgbox = MessageBox;

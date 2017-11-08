@@ -11,8 +11,26 @@
 	}
 }
 
+.text_elipsis {
+	text-overflow: ellipsis;
+    width: 75%;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .el-message {
 	margin-top: 15px;
+}
+
+.td-char-limit {
+	@media (max-width: 480px) {
+		width: 200px;
+	}
+
+	@media (min-width: 767px) {
+		width: 440px;
+	}
 }
 
 .m-t-10 {
@@ -39,6 +57,9 @@
 
 .m-b-20 {
 	margin-bottom: 20px; 
+}
+.m-r-50 {
+	margin-right: 50px;
 }
 
 .f-s-120 {

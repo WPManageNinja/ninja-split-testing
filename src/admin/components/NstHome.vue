@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="right">
-			<el-button type="primary" @click="dialogVisible = true">Add New Campaign</el-button>
+			<el-button type="primary" @click="dialogVisible = true" icon="plus"> Add New Campaign</el-button>
 		</div>
 
 		<div>
