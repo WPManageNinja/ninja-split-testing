@@ -4,32 +4,31 @@ namespace  NinjaABClass\classes;
 
 class Queries
 {
-	public static function store($table, $data) {
-
-		if($data['id']) {
-			
-			$id = $data['id'];
-			unset($data['id']);
-			$data['updated_at'] = date('Y-m-d H:i:s');
-
-			ninjaDB($table)->where('id', $id)->update($data);
-
-			wp_send_json_success(array(
-				'message' => __('Updated successfully', 'ninja-split-testing')), 
-			200);
-
-			exit;
-		}
-
+	public static function insert($table, $data) {
 		$data['created_at'] = date('Y-m-d H:i:s');
 		$data['updated_at'] = date('Y-m-d H:i:s');
-
 		$insertId = ninjaDB($table)->insert($data);
-		wp_send_json_success(array('id' => $insertId), 200);
-
-		exit;
+		return $insertId;
 	}
 
+	public static function update($table, $data, $id = null) {
+		if($id == null) {
+			$id = $data['id'];
+		}
+		
+		$data['updated_at'] = date('Y-m-d H:i:s');
+		$result = ninjaDB($table)->where('id', $id)->update($data);
+		return $result;
+	}
+
+	public static function find($table, $id) {
+		return ninjaDB($table)->find($id);
+	}
+	
+	public static function get_where($table, $column_name, $id) {
+		return ninjaDB($table)->where($column_name, $id)->get();
+	}
+	
 	public static function storePostID($table, $data) {
 		
 		$id = $data['id'];

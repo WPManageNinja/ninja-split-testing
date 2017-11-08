@@ -29,7 +29,7 @@
 	}
 
 	@media (min-width: 767px) {
-		width: 440px;
+		width: 400px;
 	}
 }
 
@@ -83,4 +83,21 @@
     	margin: 0px;
     	text-align: center;
     }
+}
+
+.search_results {
+	background: #d4d1d1;
+	color: black;
+	padding: 0px;
+	max-height: 200px;
+	overflow-y: auto;
+	li {
+		cursor: pointer;
+		padding: 10px 10px;
+		border-bottom: 1px solid white;
+		&.active, &:hover {
+			background: #115080;
+			color: white;
+		}
+	}
 }
