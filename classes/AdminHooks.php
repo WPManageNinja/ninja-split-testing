@@ -77,11 +77,15 @@ class AdminHooks {
 		}
 
 		$valid_routes = array(
-			'add-campaign'  		=> 'addCampaign',
-			'get-all-campaign'  	=> 'getAllCampaign',
-			'get-campaign-by-id' 	=> 'getCampaignByID',
-			'add-campaign-post-id'	=> 'addCampaignPostID',
-			'get-all-post-and-pages'=> 'getAllPostAndPages'
+			'add-campaign'  				=> 'addCampaign',
+			'get-all-campaign'  			=> 'getAllCampaign',
+			'get-campaign-by-id' 			=> 'getCampaignByID',
+			'add-campaign-post-id'			=> 'addCampaignPostID',
+			'get-all-post-and-pages'		=> 'getAllPostAndPages',
+			'get-all-post-types'			=> 'getAllPostTypes',
+			'store-campaign-testing-page' 	=> 'storeCampaignTestingPage',
+			'get-all-testing-page' 			=> 'getAllTestingPage',
+			'update-testing-page-status'	=> 'updateTestingPageStatus'
 		);
 
 		$requested_route = $_REQUEST['target_action'];
@@ -154,5 +158,46 @@ class AdminHooks {
 		$data = get_posts($args);
 
 		wp_send_json_success($data, 200);
+	}
+
+	public function getAllPostTypes() {
+
+		$args = ['public' => true];
+		$data = ['post_types' => get_post_types($args)];
+
+		wp_send_json_success($data, 200);
+	}
+
+	public function storeCampaignTestingPage() {
+
+		if ( ! $_REQUEST['data']['title']       || 
+			 ! $_REQUEST['data']['target_post_id'] || 
+			 ! $_REQUEST['data']['traffic_split_amount']
+			) 
+		{
+			wp_send_json_error( array(
+				'message' => __( 'All fields are required.', 'ninja-split-testing' )
+			), 423 );
+			die();
+		} 
+
+		$title = sanitize_text_field($_REQUEST['data']['title']);
+
+		if (! $title) {
+			wp_send_json_error( array(
+				'message' => __( 'Please give text only', 'ninja-split-testing' )
+			), 423 );
+			die();
+		}
+
+		Queries::storeTestingPage('nst_campaign_urls', $_REQUEST['data']);
+	}
+
+	public function getAllTestingPage() {
+		Queries::getAllTestingPage('nst_campaign_urls', $_REQUEST['campaign_id']);
+	}
+
+	public function updateTestingPageStatus() {
+		Queries::updateTestingPageStatus('nst_campaign_urls', $_REQUEST['update_status']);
 	}
 }
