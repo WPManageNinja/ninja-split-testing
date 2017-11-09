@@ -10,17 +10,15 @@
 			  :visible.sync="dialogVisible"
 			  width="30%"
 			  :before-close="handleClose">
-			  <el-form :model="form">
-			    <el-form-item label="Title">
-			      <el-input v-model="form.title" auto-complete="off"></el-input>
-			    </el-form-item>
-
-				  <nst_url_search v-model="selected_url" :title="'Select Your Target URL'"></nst_url_search>
-				  
+			  	<el-form :model="form">
+				    <el-form-item label="Title">
+				      <el-input v-model="form.title" auto-complete="off"></el-input>
+				    </el-form-item>
+				  	<nst_url_search v-model="selected_url" :title="'Select Your Target URL'"></nst_url_search>
 			  </el-form>
 			  <span slot="footer" class="dialog-footer">
 			    <el-button @click="dialogVisible = false">Cancel</el-button>
-			    <el-button type="primary" icon="el-icon-arrow-right" @click="submitNewCampaign">Continue</el-button>
+			    <el-button type="primary" @click="submitNewCampaign">Continue <i class="el-icon-d-arrow-right el-icon-right"></i></el-button>
 			  </span>
 			</el-dialog>
 		</div>
@@ -30,14 +28,11 @@
 		  <router-link :to="{name: 'nst_home'}"> 
 		  	<el-menu-item index="1">Ninja Split Testing</el-menu-item>
 		  </router-link>
-		  <router-link :to="{name: 'nst_add_campaign'}"> 
-		  	<el-menu-item index="2">Add Campaign</el-menu-item>
-		  </router-link>
 		  <router-link :to="{name: 'nst_settings'}"> 
-		  	<el-menu-item index="3">Settings</el-menu-item>
+		  	<el-menu-item index="2">Settings</el-menu-item>
 		  </router-link>
 		  <router-link :to="{name: 'nst_help'}"> 
-		  	<el-menu-item index="4">Help</el-menu-item>
+		  	<el-menu-item index="3">Help</el-menu-item>
 		  </router-link>
 		</el-menu>
 
@@ -55,7 +50,7 @@
 		},
 		data(){
 			return {
-			    selected_url: false,
+			    selected_url: {},
 				editorOption: {
                     modules: {
                         toolbar: [
@@ -76,10 +71,14 @@
 				form: {},
 				navIndex: {
 					nst_home: '1',
-					nst_add_campaign: '2',
-					nst_settings: '3',
-					nst_help: '4'
+					nst_settings: '2',
+					nst_help: '3'
 				},
+			}
+		},
+		watch: {
+			['$route.query']() {
+				this.checkAddCampaignPresentOrNot();
 			}
 		},
 		methods: {
@@ -124,15 +123,24 @@
                         });
                     });
 			},
+
 			handleClick() {
 
 			},
+			checkAddCampaignPresentOrNot() {
+				if(this.$route.query.hasOwnProperty('campaign')){
+					this.$route.query.campaign ? this.visibleAddCampaignDialog() : this.handleClose();
+				} else {
+					this.handleClose();
+				}
+			},
+			visibleAddCampaignDialog(){
+				this.dialogVisible = true;
+			}
 		},
 		mounted() {
 			this.setNavIndexing();
-
-			// 
-
+			this.checkAddCampaignPresentOrNot();
 		}
 	}
 </script>

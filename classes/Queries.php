@@ -28,6 +28,13 @@ class Queries
 		return $result;
 	}
 
+	public function deleteCampaign($id)
+	{
+		ninjaDB('nst_campaign_analytics')->where('campaign_id', $id)->delete();
+		ninjaDB('nst_campaign_urls')->where('campaign_id', $id)->delete();
+		ninjaDB('nst_campaigns')->where('id', $id)->delete();
+	}
+
 	public static function find($table, $id) 
 	{
 		return ninjaDB($table)->find($id);
@@ -62,7 +69,7 @@ class Queries
 		return ninjaDB($table)->find($id);
 	}
 
-	public static function updateTestingPageStatus($table, $id, $data) 
+	public static function updateStatusWhere($table, $id, $data) 
 	{
 		$changedStatus = [
 			'status' 	 =>  $data,
