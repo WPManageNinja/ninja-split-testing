@@ -2,11 +2,6 @@
 
 class AdminHooks {
 
-	public function __construct()
-	{
-		
-	}
-
 	public function adminMenu()
 	{
 		global $submenu;
@@ -66,7 +61,8 @@ class AdminHooks {
 	}
 
 
-	public function ajax_routes() {
+	public function ajax_routes() 
+	{
 		if ( ! current_user_can( 'manage_options') ) {
 			return;
 		}
@@ -92,8 +88,10 @@ class AdminHooks {
 
 		wp_die();
 	}
+
 	
-	public function addCampaign() {
+	public function addCampaign() 
+	{
 		
 		if( !$_REQUEST['title']) {
 			$this->responseError( __( 'Please provide title', 'ninja-split-testing') );
@@ -122,15 +120,27 @@ class AdminHooks {
 		), 200);
 	}
 
-	public function getAllCampaign() {
-		Queries::getAllData('nst_campaigns');
+
+	public function getAllCampaign() 
+	{
+		$data = Queries::getAll('nst_campaigns');
+		wp_send_json_success($data, 200);
 	}
 
-	public function getCampaignByID() {
-		Queries::getSingleData('nst_campaigns', $_REQUEST['campaign_id']);
+
+	public function getCampaignByID() 
+	{
+		$data = Queries::getSingle(
+			'nst_campaigns', 
+			intval($_REQUEST['campaign_id'])
+		);
+
+		wp_send_json_success($data, 200);
 	}
 
-	public function getAllPostAndPages() {
+
+	public function getAllPostAndPages() 
+	{
 		$searchString = sanitize_text_field($_REQUEST['search_string']);
 		$postTypes = get_post_types( array( ) );
 		
@@ -143,16 +153,16 @@ class AdminHooks {
 		wp_send_json_success($data, 200);
 	}
 
-	public function getAllPostTypes() {
-
+	public function getAllPostTypes() 
+	{
 		$args = array('public' => true);
 		$data = array('post_types' => get_post_types($args));
 
 		wp_send_json_success($data, 200);
 	}
 
-	public function createNewTestPage() {
-
+	public function createNewTestPage() 
+	{
 		if ( ! $_REQUEST['title'] || 
 			 ! $_REQUEST['target_url'] ||
 			 ! $_REQUEST['traffic_split_amount'] ||
@@ -182,8 +192,8 @@ class AdminHooks {
 		), 200);
 	}
 
-	public function updateTestingPage() {
-
+	public function updateTestingPage() 
+	{
 		if ( ! $_REQUEST['title'] ||
 		     ! $_REQUEST['target_url'] ||
 		     ! $_REQUEST['traffic_split_amount'] ||
@@ -212,7 +222,8 @@ class AdminHooks {
 		), 200);
 	}
 
-	public function getAllTestingPage() {
+	public function getAllTestingPage() 
+	{
 		$campaign_id = intval($_REQUEST['campaign_id']);
 		$pages = Queries::get_where('nst_campaign_urls', 'campaign_id', $campaign_id);
 		wp_send_json_success(array(
@@ -220,11 +231,21 @@ class AdminHooks {
 		), 200);
 	}
 
-	public function updateTestingPageStatus() {
-		Queries::updateTestingPageStatus('nst_campaign_urls', $_REQUEST['update_status']);
+	public function updateTestingPageStatus() 
+	{
+		Queries::updateTestingPageStatus(
+			'nst_campaign_urls', 
+			intval($_REQUEST['update_status']['id']),
+			sanitize_text_field($_REQUEST['update_status']['status'])
+		);
+
+		wp_send_json_success(array(
+			'message' => __('Status changed successfully', 'ninja-split-testing')), 
+		200);
 	}
 	
-	private function responseError($message = 'Something is wrong, Please try again') {
+	private function responseError($message = 'Something is wrong, Please try again') 
+	{
 		wp_send_json_error( array(
 			'message' => $message
 		), 423);
