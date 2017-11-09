@@ -3,7 +3,7 @@
 		<el-row>
 			<el-col :span="12" >
 				<div class="inline-block">
-					<h2 class="m-l-20"><i class="el-icon-edit action" @click="dialogVisible = true"></i> {{campaign_data.title}}</h2>
+					<h2 class="m-l-20"><i class="el-icon-edit action" @click="setEditCampaignVisible"></i> {{campaign_data.title}}</h2>
 				</div>
 			</el-col>
 			<el-col :span="12">
@@ -17,7 +17,7 @@
 		<div>
 			<el-dialog
 			  title="Update Campaign"
-			  :visible.sync="dialogVisible"
+			  :visible.sync="editCampaignVisible"
 			  width="30%"
 			  :before-close="handleClose">
 			  <el-form :model="campaign_data">
@@ -25,15 +25,11 @@
 			      <el-input v-model="campaign_data.title" auto-complete="off"></el-input>
 			    </el-form-item>
 
-				<label>Description</label>	
-			    <quill-editor class="m-t-10" :content="campaign_data.description"
-                      :options="editorOption"
-                      @change="onEditorChange($event)">
-                </quill-editor>
+				<nst_url_search v-model="selected_url" :title="'Select Your Target URL'"></nst_url_search>
 			    
 			  </el-form>
 			  <span slot="footer" class="dialog-footer">
-			    <el-button @click="dialogVisible = false">Cancel</el-button>
+			    <el-button @click="editCampaignVisible = false">Cancel</el-button>
 			    <el-button type="primary" icon="el-icon-arrow-right" @click="updateCampaign">Update</el-button>
 			  </span>
 			</el-dialog>
@@ -57,11 +53,16 @@
 </template>
 
 <script type="text/babel">
+	import NstUrlSearch from './NstUrlSearch.vue';
 	export default {
 		name: 'nst_view_campaign',
+		components: {
+		    'nst_url_search' : NstUrlSearch
+		},
 		data(){
 			return {
 				loading: true,
+				selected_url: {},
 				editorOption: {
                     modules: {
                         toolbar: [
@@ -77,7 +78,7 @@
                     }
                 },
                 campaign_data: {},
-				dialogVisible: false,
+				editCampaignVisible: false,
 				activeIndex: '1',
 				form: {},
 				navIndex: {
@@ -93,19 +94,24 @@
 					name:'nst_home'
 				})
 			},
-
+			setEditCampaignVisible() {
+				this.selected_url = {
+					post_id: this.campaign_data.post_id,
+					permalink: this.campaign_data.target_url,
+				}
+				this.editCampaignVisible =  true
+			},
 			updateCampaign() {
-
-				var self = this;
 				jQuery.post(ajaxurl, {
 					action: 'routes', 
-					target_action: 'add-campaign',
-					id : self.campaign_data.id,
-					title : self.campaign_data.title, 
-					description : self.form.description
+					target_action: 'update-campaign',
+					id: this.campaign_data.id,
+					title : this.campaign_data.title, 
+					post_id: this.selected_url.post_id,
+					permalink: this.selected_url.permalink
 				})
                 .done((res) => {
-                	self.dialogVisible = false;
+                	this.editCampaignVisible = false;
                     this.$message({
                             showClose: true,
                             message: res.data.message,
@@ -125,22 +131,21 @@
 				this.activeIndex = this.navIndex[this.$route.name];
 			},
 			fetchCampaignData() {
-				var self = this;
 				jQuery.get(ajaxurl,{
 					action:'routes',
 					target_action: 'get-campaign-by-id',
 					campaign_id: this.$route.params.id
 				})
 				.done((res) => {
-					self.loading = false;
-					self.campaign_data = res.data
+					this.loading = false;
+					this.campaign_data = res.data
 				})
 				.fail((err) => {
 					console.log(err)
 				})
 			},
 			handleClose() {
-				this.dialogVisible = false;
+				this.editCampaignVisible = false;
 			},
 
 			onEditorChange({text}) {

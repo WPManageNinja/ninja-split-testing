@@ -25,8 +25,10 @@
                                         v-model="item.active"
                                         style="float: right"
                                         @change="testingPageStatusChanged(item.id, item.active)"
-                                        active-value="active"
-                                        inactive-value="inactive">
+                                        on-text="Active"
+                                        off-text="Draft"
+                                        :width="75"
+                                        off-color="orange">
                                 </el-switch>
                             </div>
                             <div>
@@ -246,9 +248,6 @@
                     })
             },
             testingPageStatusChanged(id, status) {
-
-                var self = this;
-
                 jQuery.get(ajaxurl, {
                     action: 'routes',
                     target_action: 'update-testing-page-status',
@@ -259,7 +258,7 @@
 
                 })
                     .done((res) => {
-                        self.fetchAllTestingPage();
+                        this.fetchAllTestingPage();
                         this.$message({
                             showClose: true,
                             message: res.data.message,
@@ -326,11 +325,4 @@
         margin-left: 10px;
         margin-top: 2px;
     }
-
-    .el-switch {
-        .el-switch__input {
-            display: none;
-        }
-    }
-
 </style>

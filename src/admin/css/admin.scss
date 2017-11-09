@@ -1,5 +1,11 @@
 @import "./_element_icons.css";
 
+.el-switch {
+    .el-switch__input {
+        display: none;
+    }
+}
+
 .inline-block {
 	display: inline-block;
 }
