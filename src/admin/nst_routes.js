@@ -47,24 +47,24 @@ export const routes = [
 		]
 	},
 	{
-		path: '/',
+		path: '/view-campaign/',
 		component: NstViewCampaignHome,
 		props: true,
 		children: [
 			{
-				path: '/view-campaign/:id/testing-pages',
+				path: ':id/testing-pages',
 				name: 'nst_view_testing_page',
 				component: NstViewCampaignTestingPage,
 				props: true
 			},
 			{
-				path: '/view-campaign/:id/analytics',
+				path: ':id/analytics',
 				name: 'nst_view_analytics_page',
 				component: NstViewCampaignAnalyticsPage,
 				props: true
 			},
 			{
-				path: '/view-campaign/:id/settings',
+				path: ':id/settings',
 				name: 'nst_view_settings_page',
 				component: NstViewCampaignSettingsPage,
 				props: true

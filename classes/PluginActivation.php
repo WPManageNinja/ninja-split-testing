@@ -46,6 +46,7 @@ class PluginActivation {
 				target_url VARCHAR (255),
 				status ENUM('active','inactive','archived') DEFAULT 'active',
 				traffic_split_amount int(11) NULL,
+				user_id int(11),
 				visit_counts int(11) DEFAULT 0,
 				conditions TEXT,
 				created_at timestamp NULL,
