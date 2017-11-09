@@ -31,9 +31,9 @@
 	        label="Actions">
 	        <template slot-scope="scope">
 	        	<router-link :to="{ name: 'nst_view_testing_page', params: { id: scope.row.id }}">
-	        		<el-button type="primary" size="mini">View</el-button>
+	        		<el-button type="primary" size="mini" icon="view"></el-button>
 	        	</router-link>
-	        	<el-button type="danger" size="mini">Delete</el-button>
+	        	<el-button type="danger" size="mini" icon="delete2"></el-button>
 	        </template>
 	      </el-table-column>
 

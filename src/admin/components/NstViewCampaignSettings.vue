@@ -16,10 +16,10 @@
 							      	<div class="post-type-1">
 										<el-select v-model="post_type_value" placeholder="Select Post Type" @change="fetchAllPostAndPage">
 										    <el-option
-										      v-for="item in post_types"
-										      :key="item.value"
-										      :label="item.label"
-										      :value="item.value">
+										      v-for="(item, index) in post_types"
+										      :key="post_types[index]"
+										      :label="post_types[index]"
+										      :value="post_types[index]">
 										    </el-option>
 										</el-select>
 									</div>
@@ -65,19 +65,8 @@
 		data() {
 			return {
 				form: {},
-				post_type_value: 'POST',
-				post_types: [
-					{
-						id:1,
-						label:'POST',
-						value:'post'
-					},
-					{
-						id:2,
-						label:'PAGE',
-						value:'page'
-					}
-				],
+				post_type_value: 'post',
+				post_types: [],
 				postOrPage: [],
 				post_id: ''
 			}
@@ -99,6 +88,20 @@
 					console.log(err)
 				})
 			},
+			fetchAllPostTypes() {
+				var self = this;
+				jQuery.get(ajaxurl,{
+					action: 'routes',
+					target_action: 'get-all-post-types',
+				})
+				.done((res) => {
+					self.post_types = res.data.post_types
+					console.log(res)
+				})
+				.fail((err) => {
+					console.log(err)
+				})
+			},
 			submit() {
 				var self = this;
 				jQuery.post(ajaxurl, {
@@ -113,6 +116,8 @@
                             message: res.data.message,
                             type: 'success'
                         });
+
+                    self.$emit('settingCompleted');
                 })
                 .fail((error) => {
                     this.$message({
@@ -124,7 +129,9 @@
 			}
 		},
 		mounted() {
+			this.fetchAllPostTypes();
 			this.fetchAllPostAndPage();
+
 		}
 	}
 </script>

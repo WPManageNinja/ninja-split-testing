@@ -1,5 +1,5 @@
 <template >
-	<div>
+	<div class="m-r-50">
 		<el-row>
 			<el-col :span="12" >
 				<div class="inline-block">
@@ -8,7 +8,7 @@
 			</el-col>
 			<el-col :span="12">
 				<div class="right">
-					<el-button type="primary" @click="back()">Back</el-button>
+					<!-- <el-button type="primary" @click="back()">Back</el-button> -->
 				</div>
 			</el-col>
 		</el-row>
@@ -52,7 +52,7 @@
 		  </router-link>
 		</el-menu>
 
-		<router-view :campaign="campaign_data" :loading="loading"></router-view>
+		<router-view @settingCompleted= "settingCompleted" :campaign="campaign_data" :loading="loading"></router-view>
 	</div>
 </template>
 
@@ -102,7 +102,7 @@
 					target_action: 'add-campaign',
 					id : self.campaign_data.id,
 					title : self.campaign_data.title, 
-					description : self.campaign_data.description
+					description : self.form.description
 				})
                 .done((res) => {
                 	self.dialogVisible = false;
@@ -144,11 +144,16 @@
 			},
 
 			onEditorChange({text}) {
+				console.log(text)
 				this.form.description = text;
 			},
 			handleClick() {
 
 			},
+
+			settingCompleted() {
+				this.fetchCampaignData();
+			}
 		},
 		mounted() {
 			this.setNavIndexing();
@@ -162,6 +167,5 @@
 	.right {
 		text-align: right;
 		margin-top: 10px;
-		padding-right: 10px;
 	}
 </style>

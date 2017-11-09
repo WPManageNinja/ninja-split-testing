@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="right">
-			<el-button type="primary" @click="dialogVisible = true">Add New Campaign</el-button>
+			<el-button type="primary" @click="dialogVisible = true" icon="plus"> Add New Campaign</el-button>
 		</div>
 
 		<div>
@@ -15,16 +15,12 @@
 			      <el-input v-model="form.title" auto-complete="off"></el-input>
 			    </el-form-item>
 
-				<label>Description</label>	
-			    <quill-editor class="m-t-10" :content="form.description"
-                      :options="editorOption"
-                      @change="onEditorChange($event)">
-                </quill-editor>
-			    
+				  <nst_url_search v-model="selected_url" :title="'Select Your Target URL'"></nst_url_search>
+				  
 			  </el-form>
 			  <span slot="footer" class="dialog-footer">
 			    <el-button @click="dialogVisible = false">Cancel</el-button>
-			    <el-button type="primary" icon="el-icon-arrow-right" @click="TargetUrl">Continue</el-button>
+			    <el-button type="primary" icon="el-icon-arrow-right" @click="submitNewCampaign">Continue</el-button>
 			  </span>
 			</el-dialog>
 		</div>
@@ -46,14 +42,20 @@
 		</el-menu>
 
 		<router-view @navIndexing="setNavIndexing"></router-view>
+		
 	</div>
 </template>
 
 <script type="text/babel">
+	import NstUrlSearch from './NstUrlSearch.vue';
 	export default {
 		name: 'NstHome',
+		components: {
+		    'nst_url_search' : NstUrlSearch
+		},
 		data(){
 			return {
+			    selected_url: false,
 				editorOption: {
                     modules: {
                         toolbar: [
@@ -92,20 +94,25 @@
 			onEditorChange({text}) {
 				this.form.description = text;
 			},
-			TargetUrl() {
-				var self = this;
-
+            submitNewCampaign() {
+			    
 				jQuery.post(ajaxurl, {
 					action: 'routes', 
 					target_action: 'add-campaign', 
-					title : self.form.title, 
-					description : self.form.description
+					title : this.form.title, 
+					post_id: this.selected_url.post_id,
+					permalink: this.selected_url.permalink
 				})
-                    .done((res) => {
-                        self.$router.push({
-							name: 'nst_view_settings_page',
+                    .done((response) => {
+                        this.$message({
+                            showClose: true,
+                            message: response.data.message,
+                            type: 'success'
+                        });
+                        this.$router.push({
+							name: 'nst_view_testing_page',
 							params: {
-								id: res.data.id
+								id: response.data.id
 							}
 						});
                     })
