@@ -28,11 +28,9 @@ class Queries
 		return $result;
 	}
 
-	public static function deleteCampaign($id)
+	public static function delete($table, $id)
 	{
-		ninjaDB('nst_campaign_analytics')->where('campaign_id', $id)->delete();
-		ninjaDB('nst_campaign_urls')->where('campaign_id', $id)->delete();
-		ninjaDB('nst_campaigns')->where('id', $id)->delete();
+		ninjaDB($table)->where('id',$id)->delete();
 	}
 
 	public static function find($table, $id) 
@@ -53,5 +51,18 @@ class Queries
 	public static function getSingle($table, $id) 
 	{
 		return ninjaDB($table)->find($id);
+	}
+	
+	public static function deleteCampaign($id)
+	{
+		ninjaDB(Helper::getCampaignAnalyticsTableName())
+			        ->where('campaign_id', $id)
+			        ->delete();
+		ninjaDB(Helper::getCampaignUrlsTableName())
+		        ->where('campaign_id', $id)
+		        ->delete();
+		ninjaDB(Helper::getCampaignsTableName())
+		        ->where('id', $id)
+		        ->delete();
 	}
 }
