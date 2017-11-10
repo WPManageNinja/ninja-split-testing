@@ -2,8 +2,6 @@
 
 class Redirect {
 	
-	private $all_redirect_posts_transient_key = 'ninja_split_testing_all_active_post_ids';
-	
 	public function setCookie($key, $value, $days = 7) {
 		return setcookie( $key, $value, time() + ( $days * DAY_IN_SECONDS ) );
 	}
@@ -35,7 +33,7 @@ class Redirect {
 		if($wp_query->is_singular) {
 			$post_id = $wp_query->post->ID;
 			// check if the post is in any campaign records
-			$campaign = $this->getCampaign( $post_id );
+			$campaign = CampaignTransient::getCampaign($post_id);
 			if(!$campaign)
 				return;
 			
@@ -46,12 +44,11 @@ class Redirect {
 				}
 			}
 			
-			if($campaign) {
-				$urls = ninjaDB(Helper::getDbTableName('urls'))
-							->where('campaign_id', $campaign->id)
-							->where('status', 'active')
-							->get();
-				
+			$urls = ninjaDB(Helper::getDbTableName('urls'))
+						->where('campaign_id', $campaign->id)
+						->where('status', 'active')
+						->get();
+			
 				if(count($urls)) {
 					$selected_url = $this->getRedirectUrl($urls, $campaign);
 					$selected_url = apply_filters('ninja_ab_selected_url_for_redirect', $selected_url, $campaign);
@@ -63,7 +60,6 @@ class Redirect {
 					$this->redirect($selected_url->target_url);
 				}
 			}
-		}
 		return;
 	}
 	
@@ -108,38 +104,6 @@ class Redirect {
 					->insert($analyticsData);
 		return $insert_id;
 	}
-
-	/**
-	 * @param $post_id
-	 *
-	 * @return bool|mixed
-	 */
-	public function getCampaign( $post_id ) {
-		
-		if ( false === ( $campaignPosts = get_transient( $this->all_redirect_posts_transient_key ) ) ) {
-			$campaignPosts = $this->campaignPostIdsFromDb();
-			set_transient($this->all_redirect_posts_transient_key, $campaignPosts, 172800);
-		}
-		if(in_array($post_id, $campaignPosts)) {
-			return ninjaDB( Helper::getDbTableName( 'campaigns' ) )
-				->where( 'post_id', $post_id )
-				->where( 'status', 'active' )
-				->first();
-		}
-		return false;
-	}
-	
-	private function campaignPostIdsFromDb() {
-		$campaigns = ninjaDB(Helper::getDbTableName('campaigns'))
-						->where('post_id', '!=', null)
-						->where('status', 'active')
-						->get();
-		$postIds = array();
-		foreach ($campaigns as $campaign) {
-			$postIds[] = $campaign->post_id;
-		}
-		return $postIds;
-	}
 	
 	public function redirectForReturningUser($pre_redirectUrl_id, $campaign) {
 		$url = ninjaDB(Helper::getDbTableName('urls'))
@@ -160,9 +124,9 @@ class Redirect {
 	}
 	
 	private function getCookieKeyFormCampaign($campaign) {
-		return 'nst_'.$campaign->cookie_key_prefix.'_'.$campaign->id;
+		$key = 'nst_'.$campaign->cookie_key_prefix.'_'.$campaign->id;
+		return apply_filters('nst_campaign_cookie_name', $key, $campaign);
 	}
-	
 	
 	private function redirect($target_url, $status = 302) {
 		// check if the target redirect and the page is same url, Otherwise it will loop in a black hope

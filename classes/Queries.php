@@ -30,11 +30,7 @@ class Queries
 
 	public static function delete($table, $id)
 	{
-		if($table == Helper::getCampaignsTableName()) {
-			static::deleteCampaign($id);
-		} else {
-			ninjaDB($table)->where('id',$id)->delete();
-		}
+		ninjaDB($table)->where('id',$id)->delete();
 	}
 
 	public static function find($table, $id) 
@@ -56,8 +52,8 @@ class Queries
 	{
 		return ninjaDB($table)->find($id);
 	}
-
-	private static function deleteCampaign($id)
+	
+	public static function deleteCampaign($id)
 	{
 		ninjaDB(Helper::getCampaignAnalyticsTableName())
 			        ->where('campaign_id', $id)
@@ -69,6 +65,4 @@ class Queries
 		        ->where('id', $id)
 		        ->delete();
 	}
-
-	
 }
