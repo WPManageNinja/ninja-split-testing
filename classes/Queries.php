@@ -28,11 +28,15 @@ class Queries
 		return $result;
 	}
 
-	public function deleteCampaign($id)
+	public static function delete($table, $id)
 	{
-		ninjaDB('nst_campaign_analytics')->where('campaign_id', $id)->delete();
-		ninjaDB('nst_campaign_urls')->where('campaign_id', $id)->delete();
-		ninjaDB('nst_campaigns')->where('id', $id)->delete();
+		if($table == 'nst_campaigns') {
+			ninjaDB('nst_campaign_analytics')->where('campaign_id', $id)->delete();
+			ninjaDB('nst_campaign_urls')->where('campaign_id', $id)->delete();
+			ninjaDB('nst_campaigns')->where('id', $id)->delete();
+		} else {
+			ninjaDB($table)->where('id',$id)->delete();
+		}
 	}
 
 	public static function find($table, $id) 
