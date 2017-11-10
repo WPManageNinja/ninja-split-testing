@@ -48,20 +48,6 @@ class Queries
 	{
 		return ninjaDB($table)->where($column_name, $id)->get();
 	}
-	
-	// public static function storePostID($table, $data) {
-		
-	// 	$id = $data['id'];
-	// 	unset($data['id']);
-
-	// 	ninjaDB($table)->where('id', $id)->update($data);
-
-	// 	wp_send_json_success(array(
-	// 		'message' => __('Updated successfully', 'ninja-split-testing')), 
-	// 	200);
-
-	// 	exit;
-	// }
 
 	public static function getAll($table) 
 	{
@@ -72,14 +58,5 @@ class Queries
 	{
 		return ninjaDB($table)->find($id);
 	}
-
-	public static function updateStatusWhere($table, $id, $data) 
-	{
-		$changedStatus = [
-			'status' 	 =>  $data,
-			'updated_at' =>   date('Y-m-d H:i:s')
-		];
-
-		ninjaDB($table)->where('id', $id)->update($changedStatus);
-	}
+	
 }
