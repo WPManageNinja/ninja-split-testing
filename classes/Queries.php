@@ -28,11 +28,15 @@ class Queries
 		return $result;
 	}
 
-	public function deleteCampaign($id)
+	public static function delete($table, $id)
 	{
-		ninjaDB('nst_campaign_analytics')->where('campaign_id', $id)->delete();
-		ninjaDB('nst_campaign_urls')->where('campaign_id', $id)->delete();
-		ninjaDB('nst_campaigns')->where('id', $id)->delete();
+		if($table == 'nst_campaigns') {
+			ninjaDB('nst_campaign_analytics')->where('campaign_id', $id)->delete();
+			ninjaDB('nst_campaign_urls')->where('campaign_id', $id)->delete();
+			ninjaDB('nst_campaigns')->where('id', $id)->delete();
+		} else {
+			ninjaDB($table)->where('id',$id)->delete();
+		}
 	}
 
 	public static function find($table, $id) 
@@ -44,20 +48,6 @@ class Queries
 	{
 		return ninjaDB($table)->where($column_name, $id)->get();
 	}
-	
-	// public static function storePostID($table, $data) {
-		
-	// 	$id = $data['id'];
-	// 	unset($data['id']);
-
-	// 	ninjaDB($table)->where('id', $id)->update($data);
-
-	// 	wp_send_json_success(array(
-	// 		'message' => __('Updated successfully', 'ninja-split-testing')), 
-	// 	200);
-
-	// 	exit;
-	// }
 
 	public static function getAll($table) 
 	{
@@ -68,14 +58,5 @@ class Queries
 	{
 		return ninjaDB($table)->find($id);
 	}
-
-	public static function updateStatusWhere($table, $id, $data) 
-	{
-		$changedStatus = [
-			'status' 	 =>  $data,
-			'updated_at' =>   date('Y-m-d H:i:s')
-		];
-
-		ninjaDB($table)->where('id', $id)->update($changedStatus);
-	}
+	
 }

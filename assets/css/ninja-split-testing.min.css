@@ -14,6 +14,11 @@
   color: #20a0ff;
 }
 
+.pull-left {
+  display: block;
+  float: left;
+}
+
 .text_elipsis {
   text-overflow: ellipsis;
   width: 75%;

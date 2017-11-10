@@ -93,9 +93,9 @@
 
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-					    <el-button @click="addTestVisible = false">Cancel</el-button>
-					    <el-button type="primary" icon="el-icon-arrow-right" @click="addNewTest()">Add</el-button>
-					  </span>
+				    <el-button @click="addTestVisible = false">Cancel</el-button>
+				    <el-button type="primary" icon="el-icon-arrow-right" @click="addNewTest()">Add</el-button>
+				</span>
             </el-dialog>
         </div>
 
@@ -123,9 +123,20 @@
                     <nst_url_search v-model="selected_url" :title="'Select Your Target Link'"></nst_url_search>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-					    <el-button @click="editTestVisible = false">Cancel</el-button>
-					    <el-button type="primary" icon="el-icon-arrow-right" @click="updateTest()">Update</el-button>
-					  </span>
+                    <el-switch
+                        v-model="current_working_test.delete"
+                        style="float: left"
+                        on-text="Delete"
+                        off-text="No"
+                        :width="75"
+                        on-color="red">
+                    </el-switch>
+
+
+                    <el-button @click="editTestVisible = false">Cancel</el-button>
+                    <el-button type="danger" v-if="current_working_test.delete" @click="deletePageBy(current_working_test.id)">Sure, Delete</el-button>
+				    <el-button type="primary" v-else icon="el-icon-arrow-right" @click="updateTest()">Update</el-button>
+				 </span>
             </el-dialog>
         </div>
 
@@ -166,6 +177,7 @@
                     .done((res) => {
                         forEach(res.data.pages, (page) => {
                             page.active = (page.status == 'active') ? true : false;
+                            page.delete = false;
                         });
                         this.testing_pages = res.data.pages;
                     })
@@ -201,7 +213,7 @@
                             message: response.data.message,
                             type: 'success'
                         });
-                        this.testing_pages.push(response.data.test_page);
+                        this.fetchAllTestingPage();
                         this.handleClose();
                     })
                     .fail((error) => {
@@ -280,7 +292,26 @@
                 this.addTestVisible = false
             },
 
+            deletePageBy(id) {
+                jQuery.get(ajaxurl, {
+                    action: 'routes',
+                    target_action: 'delete-testing-page-by-id',
+                    id: id
+                })
+                .done((res) => {
+                    this.$message({
+                        showClose: true,
+                        message: res.data.message,
+                        type: 'success'
+                    });
 
+                    this.fetchAllTestingPage();
+                    this.editTestVisible = false;
+                })
+                .fail((err) => {
+                    console.log(err)
+                })
+            }
         },
         mounted() {
             this.fetchAllTestingPage();
