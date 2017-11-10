@@ -54,5 +54,4 @@ class Queries
 	{
 		return ninjaDB($table)->find($id);
 	}
-	
 }
