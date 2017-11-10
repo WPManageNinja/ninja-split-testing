@@ -19,8 +19,8 @@
                             class="m-b-20">
                         <el-card class="box-card">
                             <div slot="header" class="clearfix">
-                                <span class="label text_elipsis"><i class="el-icon-edit action"
-                                                                    @click="setEditDialogVisible(item)"></i>  {{item.title}}</span>
+                                <span class="label text_elipsis">{{item.title}}</span>
+                                <i class="el-icon-setting action settings" @click="setEditDialogVisible(item)"></i>
                                 <el-switch
                                         v-model="item.active"
                                         style="float: right"
@@ -30,6 +30,7 @@
                                         :width="75"
                                         off-color="orange">
                                 </el-switch>
+
                             </div>
                             <div>
                                 <table class="table">
@@ -213,6 +214,7 @@
             },
             setEditDialogVisible(item) {
                 this.current_working_test = Object.assign({}, this.current_working_test, item);
+                this.current_working_test.traffic_split_amount = parseInt(this.current_working_test.traffic_split_amount);
                 this.selected_url = {
                     permalink: item.target_url,
                     post_id: item.target_post_id
