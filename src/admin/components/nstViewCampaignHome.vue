@@ -48,7 +48,7 @@
 		  </router-link>
 		</el-menu>
 
-		<router-view @settingCompleted= "settingCompleted" :campaign="campaign_data" :loading="loading"></router-view>
+		<router-view @setNavIndexing="setNavIndexing" @settingCompleted= "settingCompleted" :campaign="campaign_data" :loading="loading"></router-view>
 	</div>
 </template>
 
@@ -128,6 +128,7 @@
 			},
 
 			setNavIndexing() {
+				console.log('calla')
 				this.activeIndex = this.navIndex[this.$route.name];
 			},
 			fetchCampaignData() {
