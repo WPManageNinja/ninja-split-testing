@@ -77,7 +77,8 @@ class AdminHooks {
 			'update-testing-page-status'	=> 'updateTestingPageStatus',
 			'update-campaign-status'		=> 'updateCampaignStatus',
 			'update-testing-page'	        => 'updateTestingPage',
-			'delete-campaign-by-id'			=> 'deleteCampaignByID'
+			'delete-campaign-by-id'			=> 'deleteCampaignByID',
+			'delete-testing-page-by-id'		=> 'deleteTestingPageByID'
 		);
 
 		$requested_route = $_REQUEST['target_action'];
@@ -153,13 +154,28 @@ class AdminHooks {
 	public function deleteCampaignByID()
 	{
 		$campaign_id = intval($_REQUEST['id']);
+<<<<<<< HEAD
+		Queries::delete('nst_campaigns', $campaign_id);
+
+=======
 		do_action('nst_before_campaign_delete', $campaign_id);
 		Queries::deleteCampaign($campaign_id);
 		do_action('nst_after_campaign_deleted', $campaign_id);
 		
+>>>>>>> master
 		wp_send_json_success(array(
 			'message' => __('Campaign deleted successfully', 'ninja-split-testing')
 		), 200);
+	}
+
+	public function deleteTestingPageByID()
+	{
+		$page_id = intval($_REQUEST['id']);
+		Queries::delete('nst_campaign_urls', $page_id);
+
+		wp_send_json_success(array(
+			'message' => __('Testing Page deleted successfully', 'ninja-split-testing')
+		),200);
 	}
 
 
@@ -304,6 +320,7 @@ class AdminHooks {
 			'message' => __('Status changed successfully', 'ninja-split-testing')), 
 		200);
 	}
+
 	
 	private function responseError($message = 'Something is wrong, Please try again') 
 	{
