@@ -21,7 +21,7 @@ class AdminHooks {
 			$submenu['ninja-split-testing'][] = array(
 				__( 'Add Campaigns', 'ninja-split-testing' ),
 				$capability,
-				'admin.php?page=ninja-split-testing#/add-campaign'
+				'admin.php?page=ninja-split-testing#/?campaign=true'
 			);
 			$submenu['ninja-split-testing'][] = array(
 				__( 'Settings', 'ninja-split-testing' ),
@@ -69,6 +69,7 @@ class AdminHooks {
 
 		$valid_routes = array(
 			'add-campaign'  				=> 'addCampaign',
+			'update-campaign'				=> 'updateCampaign',
 			'get-all-campaign'  			=> 'getAllCampaign',
 			'get-campaign-by-id' 			=> 'getCampaignByID',
 			'add-campaign-post-id'			=> 'addCampaignPostID',
@@ -77,7 +78,9 @@ class AdminHooks {
 			'store-campaign-testing-page' 	=> 'createNewTestPage',
 			'get-all-testing-page' 			=> 'getAllTestingPage',
 			'update-testing-page-status'	=> 'updateTestingPageStatus',
-			'update-testing-page'	        => 'updateTestingPage'
+			'update-campaign-status'		=> 'updateCampaignStatus',
+			'update-testing-page'	        => 'updateTestingPage',
+			'delete-campaign-by-id'			=> 'deleteCampaignByID'
 		);
 
 		$requested_route = $_REQUEST['target_action'];
@@ -92,7 +95,6 @@ class AdminHooks {
 	
 	public function addCampaign() 
 	{
-		
 		if( !$_REQUEST['title']) {
 			$this->responseError( __( 'Please provide title', 'ninja-split-testing') );
 		}
@@ -120,11 +122,47 @@ class AdminHooks {
 		), 200);
 	}
 
+	public function updateCampaign()
+	{
+		if( !$_REQUEST['title']) {
+			$this->responseError( __( 'Please provide title', 'ninja-split-testing') );
+		}
+		
+		if( !$_REQUEST['post_id']) {
+			$this->responseError( __( 'Please Select Any Post or Page', 'ninja-split-testing') );
+		}
+		
+		$campaign_data = array(
+			'post_id' => intval( $_REQUEST['post_id'] ),
+			'target_url' => sanitize_text_field($_REQUEST['permalink']),
+			'title' => sanitize_text_field($_REQUEST['title']),
+		);
+
+		$id = intval($_REQUEST['id']);
+		$campaign = Queries::update('nst_campaigns', $campaign_data, $id);
+		
+		wp_send_json_success(array(
+			'message' => __('Campaign updated successfully', 'ninja-split-testing')
+		), 200);
+	}
+
+
+	public function deleteCampaignByID()
+	{
+		$campaign_id = intval($_REQUEST['id']);
+		Queries::deleteCampaign($campaign_id);
+
+		wp_send_json_success(array(
+			'message' => __('Campaign deleted successfully', 'ninja-split-testing')
+		), 200);
+	}
+
 
 	public function getAllCampaign() 
 	{
-		$data = Queries::getAll('nst_campaigns');
-		wp_send_json_success($data, 200);
+		wp_send_json_success(array(
+			'campaign' => Queries::getAll('nst_campaigns')
+		), 200);
 	}
 
 
@@ -233,8 +271,21 @@ class AdminHooks {
 
 	public function updateTestingPageStatus() 
 	{
-		Queries::updateTestingPageStatus(
+		Queries::updateStatusWhere(
 			'nst_campaign_urls', 
+			intval($_REQUEST['update_status']['id']),
+			sanitize_text_field($_REQUEST['update_status']['status'])
+		);
+
+		wp_send_json_success(array(
+			'message' => __('Status changed successfully', 'ninja-split-testing')), 
+		200);
+	}
+
+	public function updateCampaignStatus()
+	{
+		Queries::updateStatusWhere(
+			'nst_campaigns', 
 			intval($_REQUEST['update_status']['id']),
 			sanitize_text_field($_REQUEST['update_status']['status'])
 		);
@@ -251,4 +302,5 @@ class AdminHooks {
 		), 423);
 		die();
 	}
+	
 }

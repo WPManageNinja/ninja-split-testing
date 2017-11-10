@@ -2,7 +2,6 @@
  * Ninja Split Tesiting Components
  */
 const NstHome = require('./components/NstHome.vue');
-const NstAddCampaign = require('./components/NstAddCampaign.vue');
 const NstSettings = require('./components/NstSettings.vue');
 const NstHelp = require('./components/NstHelp.vue');
 const NstAllCampaign = require('./components/NstAllCampaign.vue');
@@ -27,9 +26,8 @@ export const routes = [
 				props: true,
 			},
 			{
-				path: '/add-campaign',
-				name: 'nst_add_campaign',
-				component: NstAddCampaign,
+				path: '?add-campaign=true',
+				component: NstAllCampaign,
 				props: true
 			},
 			{

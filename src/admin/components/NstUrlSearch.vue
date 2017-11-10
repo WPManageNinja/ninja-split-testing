@@ -3,15 +3,15 @@
         <div class="nst_search_links_container">
             <div class="nst_form_group">
                 <label for="nst_search">{{ title }}</label>
-                <input :placeholder="placeholder" id="nst_search" v-model="search" />
+                <el-input :placeholder="placeholder" id="nst_search" v-model="search"></el-input>
             </div>
-            <div v-if="results && results.length" class="search_results">
+            <div v-if="results && results.length" class="search_results m-t-10">
                 <ul>
                     <li class="link_url" v-for="result in results" @click="setUrl(result, $event)" :key="result.ID">{{ result.title }} <span class="type">{{ result.info }}</span></li>
                 </ul>
             </div>
             <div class="selected_url">
-                <p>Selected URL: {{ value.permalink }}</p>
+                <p>Selected URL: {{ search_value.permalink }}</p>
             </div>
         </div>
     </div>
@@ -47,7 +47,8 @@
         data() {
             return {
                 search: '',
-                results: []
+                results: [],
+                search_value: this.value
             }
         },
         watch: {
@@ -66,7 +67,6 @@
                 jQuery.post(ninja_split_testing_admin.ajaxurl, data)
                     .then((response) => {
                         this.results = JSON.parse(response);
-                        console.log(response);
                     })
                     .fail((error) => {
 
@@ -75,12 +75,12 @@
             setUrl(url, $event) {
                 jQuery('.link_url').removeClass('active');
                 jQuery($event.target).addClass('active');
-                this.value = {
+                this.search_value = {
                     permalink: url.permalink,
                     post_id: url.ID,
                     type: url.info
                 };
-                this.$emit('input', this.value);
+                this.$emit('input', this.search_value);
             }
         },
         mounted() {
