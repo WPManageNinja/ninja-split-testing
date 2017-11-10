@@ -1,11 +1,12 @@
 <?php namespace  NinjaABClass\classes;
 
 class AdminHooks {
-
+	
 	public function adminMenu()
 	{
 		global $submenu;
 		$capability = 'manage_options';
+		$capability = apply_filters('nst_campaign_management_permission', $capability);
 		add_menu_page( __('Ninja Split Testing', 'ninja-split-testing'),
 			__('Ninja Split Testing', 'ninja-split-testing'),
 			$capability,
@@ -62,10 +63,12 @@ class AdminHooks {
 
 	public function ajax_routes() 
 	{
-		if ( ! current_user_can( 'manage_options') ) {
+		$capability = 'manage_options';
+		$capability = apply_filters('nst_campaign_management_permission', $capability);
+		if ( ! current_user_can( $capability ) ) {
 			return;
 		}
-
+		
 		$valid_routes = array(
 			'add-campaign'  				=> 'addCampaign',
 			'update-campaign'				=> 'updateCampaign',
@@ -165,10 +168,7 @@ class AdminHooks {
 		
 		do_action('nst_before_campaign_delete', $campaign_id);
 
-		Queries::delete(
-			Helper::getCampaignsTableName(), 
-			$campaign_id
-		);
+		Queries::deleteCampaign($campaign_id);
 
 		do_action('nst_after_campaign_deleted', $campaign_id);
 
