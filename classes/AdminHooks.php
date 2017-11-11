@@ -81,7 +81,8 @@ class AdminHooks {
 			'update-campaign-status'		=> 'updateCampaignStatus',
 			'update-testing-page'	        => 'updateTestingPage',
 			'delete-campaign-by-id'			=> 'deleteCampaignByID',
-			'delete-testing-page-by-id'		=> 'deleteTestingPageByID'
+			'delete-testing-page-by-id'		=> 'deleteTestingPageByID',
+			'get-campaign-analytics-data'	=> 'getCampaignAnalyticsData'
 		);
 
 		$requested_route = $_REQUEST['target_action'];
@@ -116,7 +117,7 @@ class AdminHooks {
 		$campaign_data = apply_filters('nst_create_new_campaign', $campaign_data);
 		
 		$campaignId = Queries::insert(
-			Helper::getCampaignsTableName(), 
+			Helper::getDbTableName('campaigns'), 
 			$campaign_data
 		);
 		
@@ -149,7 +150,7 @@ class AdminHooks {
 		$campaign_data = apply_filters('nst_update_campaign_data', $campaign_data, $campaign_id);
 		
 		$result = Queries::update(
-			Helper::getCampaignsTableName, 
+			Helper::getDbTableName('campaigns'), 
 			$campaign_data, 
 			$campaign_id
 		);
@@ -182,7 +183,7 @@ class AdminHooks {
 		$page_id = intval($_REQUEST['id']);
 
 		Queries::delete(
-			Helper::getCampaignUrlsTableName(), 
+			Helper::getDbTableName('urls'), 
 			$page_id
 		);
 
@@ -194,7 +195,7 @@ class AdminHooks {
 
 	public function getAllCampaign() 
 	{
-		$campaigns = Queries::getAll(Helper::getCampaignsTableName());
+		$campaigns = Queries::getAll(Helper::getDbTableName('campaigns'));
 
 		$campaigns = apply_filters('nst_all_campaigns', $campaigns);
 
@@ -206,7 +207,7 @@ class AdminHooks {
 	public function getCampaignByID() 
 	{
 		$campaign = Queries::find(
-			Helper::getCampaignsTableName(), 
+			Helper::getDbTableName('campaigns'), 
 			intval($_REQUEST['campaign_id'])
 		);
 
@@ -240,14 +241,14 @@ class AdminHooks {
 		$page_data = apply_filters('nst_insert_campaign_page', $page_data );
 		
 		$pageId = Queries::insert(
-			Helper::getCampaignUrlsTableName(), 
+			Helper::getDbTableName('urls'), 
 			$page_data
 		);
 		
 		do_action('nst_created_new_campaign_page', $campaign_id, $pageId );
 		
 		$campaign_page = Queries::find(
-			'nst_campaign_urls', 
+			Helper::getDbTableName('urls'), 
 			$pageId
 		);
 
@@ -284,7 +285,7 @@ class AdminHooks {
 		$page_data = apply_filters('nst_update_campaign_page_data', $page_data, $campaign_id);
 
 		$pageId = Queries::update(
-			Helper::getCampaignUrlsTableName(), 
+			Helper::getDbTableName('urls'), 
 			$page_data, 
 			$page_id
 		);
@@ -302,7 +303,7 @@ class AdminHooks {
 		$campaign_id = intval($_REQUEST['campaign_id']);
 
 		$pages = Queries::get_where(
-			Helper::getCampaignUrlsTableName(), 
+			Helper::getDbTableName('urls'), 
 			'campaign_id', 
 			$campaign_id
 		);
@@ -323,7 +324,7 @@ class AdminHooks {
 		$updateData = apply_filters('nst_update_page_status', $updateData, $pageId);
 		
 		Queries::update(
-			Helper::getCampaignUrlsTableName(),
+			Helper::getDbTableName('urls'),
 			$updateData,
 			$pageId
 		);
@@ -344,7 +345,7 @@ class AdminHooks {
 		$update_data = apply_filters('nst_update_campaign_status_data', $update_data, $campaign_id );
 		
 		Queries::update(
-			Helper::getCampaignsTableName(),
+			Helper::getDbTableName('campaigns'),
 			$update_data,
 			$campaign_id
 		);
@@ -354,6 +355,21 @@ class AdminHooks {
 		wp_send_json_success(array(
 			'message' => __('Status changed successfully', 'ninja-split-testing')), 
 		200);
+	}
+
+
+	public function getCampaignAnalyticsData()
+	{
+		$campaign_id = intval($_REQUEST['id']);
+
+		$data = Queries::getCampaignAnalytics(
+			Helper::getDbTableName('urls'),
+			$campaign_id
+		);
+
+		wp_send_json_success(array(
+			'analyticsData' => $data
+		), 200);
 	}
 
 	
