@@ -52,16 +52,37 @@ class Queries
 	{
 		return ninjaDB($table)->find($id);
 	}
+
+	public static function getCampaignAnalytics($table, $campaign_id)
+	{
+		$active = ninjaDB($table)
+	                 ->where('campaign_id', $campaign_id)
+	                 ->where('status', 'active')
+	                 ->select(array('target_url','traffic_split_amount', 'visit_counts'))
+	                 ->get();
+
+        $inactive = ninjaDB($table)
+	                 ->where('campaign_id', $campaign_id)
+	                 ->where('status', 'inactive')->get();
+
+		$data = [
+			'totalActivePages'   => count($active),
+			'totalInactivePages' => count($inactive),
+			'activePageData'	 => $active
+		];
+
+		return $data;
+	}
 	
 	public static function deleteCampaign($id)
 	{
-		ninjaDB(Helper::getCampaignAnalyticsTableName())
+		ninjaDB(Helper::getDbTableName('analytics'))
 			        ->where('campaign_id', $id)
 			        ->delete();
-		ninjaDB(Helper::getCampaignUrlsTableName())
+		ninjaDB(Helper::getDbTableName('urls'))
 		        ->where('campaign_id', $id)
 		        ->delete();
-		ninjaDB(Helper::getCampaignsTableName())
+		ninjaDB(Helper::getDbTableName('campaigns'))
 		        ->where('id', $id)
 		        ->delete();
 	}

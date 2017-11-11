@@ -39,21 +39,6 @@ class Helper {
 		return $ip;
 	}
 
-	public static function getCampaignsTableName()
-	{
-		return 'nst_campaigns';
-	}
-
-	public static function getCampaignUrlsTableName()
-	{
-		return 'nst_campaign_urls';
-	}
-
-	public static function getCampaignAnalyticsTableName()
-	{
-		return 'nst_campaign_analytics';
-	}
-
 	public static function getAssetsDirUrl() 
 	{
 		return plugin_dir_url( __DIR__ );
