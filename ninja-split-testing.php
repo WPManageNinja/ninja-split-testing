@@ -24,8 +24,11 @@ if(!class_exists('NinjaSplitTesting')) {
 	class NinjaSplitTesting
 	{
 		public function boot() {
-			$this->public_actions();
-			$this->adminActions();
+			if(is_admin()) {
+				$this->adminActions();
+			} else {
+				$this->public_actions();
+			}
 		}
 		
 		public function public_actions() {
@@ -39,11 +42,22 @@ if(!class_exists('NinjaSplitTesting')) {
 			$adminHooks = new AdminHooks();
 			add_action('admin_menu', array($adminHooks, 'adminMenu'));
 			add_action('wp_ajax_routes', array($adminHooks, 'ajax_routes'));
+			$this->resetTransientEvents();
 		}
+		
+		private function resetTransientEvents() {
+			add_action('nst_campaign_updated', '\NinjaABClass\classes\CampaignTransient::rebuildTransient');
+			add_action('nst_updated_campaign_status', '\NinjaABClass\classes\CampaignTransient::rebuildTransient');
+			add_action('nst_after_campaign_deleted', '\NinjaABClass\classes\CampaignTransient::rebuildTransient');
+		}
+		
 	}
 	
-	$NinjaSplitTesting = new NinjaSplitTesting();
-	$NinjaSplitTesting->boot();
+	add_action('init', function () {
+		$ninjaSplitTesting = new NinjaSplitTesting();
+		$ninjaSplitTesting->boot();
+	});
+	
 }
 
 // on activation

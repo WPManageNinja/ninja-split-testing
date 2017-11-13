@@ -1,5 +1,5 @@
 <template>
-	<div class="nst_view_campaign_setttings">
+	<div class="nst_view_campaign_setttings m-l-20 m-t-10">
 		<!--heading-->
 		<el-row>
 			<el-col :span="20" class="m-l-20">

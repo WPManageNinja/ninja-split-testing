@@ -30,13 +30,7 @@ class Queries
 
 	public static function delete($table, $id)
 	{
-		if($table == 'nst_campaigns') {
-			ninjaDB('nst_campaign_analytics')->where('campaign_id', $id)->delete();
-			ninjaDB('nst_campaign_urls')->where('campaign_id', $id)->delete();
-			ninjaDB('nst_campaigns')->where('id', $id)->delete();
-		} else {
-			ninjaDB($table)->where('id',$id)->delete();
-		}
+		ninjaDB($table)->where('id',$id)->delete();
 	}
 
 	public static function find($table, $id) 
@@ -58,5 +52,38 @@ class Queries
 	{
 		return ninjaDB($table)->find($id);
 	}
+
+	public static function getCampaignAnalytics($table, $campaign_id)
+	{
+		$active = ninjaDB($table)
+	                 ->where('campaign_id', $campaign_id)
+	                 ->where('status', 'active')
+	                 ->select(array('target_url','traffic_split_amount', 'visit_counts'))
+	                 ->get();
+
+        $inactive = ninjaDB($table)
+	                 ->where('campaign_id', $campaign_id)
+	                 ->where('status', 'inactive')->get();
+
+		$data = [
+			'totalActivePages'   => count($active),
+			'totalInactivePages' => count($inactive),
+			'activePageData'	 => $active
+		];
+
+		return $data;
+	}
 	
+	public static function deleteCampaign($id)
+	{
+		ninjaDB(Helper::getDbTableName('analytics'))
+			        ->where('campaign_id', $id)
+			        ->delete();
+		ninjaDB(Helper::getDbTableName('urls'))
+		        ->where('campaign_id', $id)
+		        ->delete();
+		ninjaDB(Helper::getDbTableName('campaigns'))
+		        ->where('id', $id)
+		        ->delete();
+	}
 }
