@@ -166,13 +166,9 @@ class AdminHooks {
 	public function deleteCampaignByID()
 	{
 		$campaign_id = intval($_REQUEST['id']);
-		
 		do_action('nst_before_campaign_delete', $campaign_id);
-
-		Queries::deleteCampaign($campaign_id);
-
+		Queries::delete('nst_campaigns', $campaign_id);
 		do_action('nst_after_campaign_deleted', $campaign_id);
-
 		wp_send_json_success(array(
 			'message' => __('Campaign deleted successfully', 'ninja-split-testing')
 		), 200);
