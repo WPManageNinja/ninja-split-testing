@@ -1,8 +1,8 @@
 <template>
-	<div class="nst_view_campaign_setttings m-l-20 m-t-10">
+	<div class="nst_view_campaign_setttings m-t-10">
 		<!--heading-->
 		<el-row>
-			<el-col :span="20" class="m-l-20">
+			<el-col :span="20">
 				<el-card class="box-card">
 					<div slot="header" class="clearfix">
 					    <h3>Settings</h3>
@@ -81,6 +81,7 @@
 		},
 		mounted() {
 			this.setSelectedUrl();
+			this.$emit('setNavIndexing');
 		}
 	}
 </script>
