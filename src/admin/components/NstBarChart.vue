@@ -1,8 +1,8 @@
 <script>
-import { Line } from 'vue-chartjs'
+import { Bar } from 'vue-chartjs'
 export default{
-	props: ['datasets', 'labels'],
-	extends: Line,
+	props: ['data'],
+	extends: Bar,
 	watch: {
 		datasets() {
 			this.createChart()
@@ -11,8 +11,7 @@ export default{
 	methods: {
 		createChart() {
 		    this.renderChart({
-		      labels: this.labels,
-		      datasets: this.datasets
+		      ...this.data
 		    })
 		}
 	},
