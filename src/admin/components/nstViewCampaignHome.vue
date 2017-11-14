@@ -1,9 +1,9 @@
 <template >
-	<div class="m-r-50">
+	<div class="m-r-20">
 		<el-row>
 			<el-col :span="12" >
 				<div class="inline-block">
-					<h2 class="m-l-20"><i class="el-icon-edit action" @click="setEditCampaignVisible"></i> {{campaign_data.title}}</h2>
+					<h2><i class="el-icon-edit action" @click="setEditCampaignVisible"></i> {{campaign_data.title}}</h2>
 				</div>
 			</el-col>
 			<el-col :span="12">
@@ -36,15 +36,21 @@
 		</div>
 		
 
-		<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+		<el-menu :default-active="activeIndex" class="el-menu-demo bg-w" mode="horizontal">
 		  <router-link :to="{name: 'nst_view_testing_page'}"> 
-		  	<el-menu-item index="1">Testing Pages</el-menu-item>
+		  	<el-menu-item index="1" :style="activeIndex == '1' ? 'border-bottom: 5px solid #20a0ff' : ''">
+		  		Testing Pages
+		  	</el-menu-item>
 		  </router-link>
 		  <router-link :to="{name: 'nst_view_analytics_page'}"> 
-		  	<el-menu-item index="2">Analytics</el-menu-item>
+		  	<el-menu-item index="2" :style="activeIndex == '2' ? 'border-bottom: 5px solid #20a0ff' : ''">
+		  		Analytics
+		  	</el-menu-item>
 		  </router-link>
 		  <router-link :to="{name: 'nst_view_settings_page'}"> 
-		  	<el-menu-item index="3">Settings</el-menu-item>
+		  	<el-menu-item index="3" :style="activeIndex == '3' ? 'border-bottom: 5px solid #20a0ff' : ''">
+		  		Settings
+		  	</el-menu-item>
 		  </router-link>
 		</el-menu>
 

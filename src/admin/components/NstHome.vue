@@ -1,9 +1,5 @@
 <template>
-	<div>
-		<div class="right">
-			<el-button type="primary" @click="dialogVisible = true" icon="plus"> Add New Campaign</el-button>
-		</div>
-
+	<div class="m-r-20">
 		<div>
 			<el-dialog
 			  title="Add New Campaign"
@@ -24,18 +20,24 @@
 		</div>
 		
 
-		<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+		<el-menu :router="true" :default-active="activeIndex" class="el-menu-demo bg-w" mode="horizontal">
 		  <router-link :to="{name: 'nst_home'}"> 
-		  	<el-menu-item index="1">
+		  	<el-menu-item index="1" :style="activeIndex == '1' ? 'border-bottom: 5px solid #20a0ff' : ''" >
 		  		Ninja Split Testing
 		  	</el-menu-item>
 		  </router-link>
-		  <router-link :to="{name: 'nst_settings'}"> 
-		  	<el-menu-item index="2">Settings</el-menu-item>
+		  <!-- <router-link :to="{name: 'nst_settings'}"> 
+		  	<el-menu-item index="2" :style="activeIndex == '2' ? 'border-bottom: 5px solid #20a0ff' : ''">		Settings
+		  	</el-menu-item>
+		  </router-link> -->
+		  <router-link :to="{name: 'nst_help'}" > 
+		  	<el-menu-item index="3" :style="activeIndex == '3' ? 'border-bottom: 5px solid #20a0ff' : ''">
+		  		Help
+		  	</el-menu-item>
 		  </router-link>
-		  <router-link :to="{name: 'nst_help'}"> 
-		  	<el-menu-item index="3">Help</el-menu-item>
-		  </router-link>
+		  	<div class="right" v-show="activeIndex == '1'">
+		  		<el-button type="primary" @click="dialogVisible = true" icon="plus"> Add New Campaign</el-button>
+		  	</div>
 		</el-menu>
 
 		<router-view @navIndexing="setNavIndexing"></router-view>

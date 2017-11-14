@@ -2,6 +2,11 @@
 
 class AdminHooks {
 	
+	/**
+	 * Adding admin menu for the WordPress Plugin
+	 * 
+	 * @return void
+	 */
 	public function adminMenu()
 	{
 		global $submenu;
@@ -25,11 +30,6 @@ class AdminHooks {
 				'admin.php?page=ninja-split-testing#/?campaign=true'
 			);
 			$submenu['ninja-split-testing'][] = array(
-				__( 'Settings', 'ninja-split-testing' ),
-				$capability,
-				'admin.php?page=ninja-split-testing#/settings'
-			);
-			$submenu['ninja-split-testing'][] = array(
 				__( 'Help', 'ninja-split-testing' ),
 				$capability,
 				'admin.php?page=ninja-split-testing#/help'
@@ -37,12 +37,24 @@ class AdminHooks {
 		}
 	}
 
+
+	/**
+	 * Showing main page of WordPress Plugin
+	 * 
+	 * @return void
+	 */
 	public function showMainPage()
 	{
 		$this->enqueue_nst_assets();
 		echo Helper::loadViewFile('show_main_page');
 	}
 
+
+	/**
+	 * Adding all types of assests(e.g css,js) into WordPress Plugin
+	 * 
+	 * @return void
+	 */
 	public function enqueue_nst_assets()
 	{
 		wp_enqueue_script(
@@ -61,6 +73,11 @@ class AdminHooks {
 	}
 
 
+	/**
+	 * Declaring ajax routes with target actions
+	 * 
+	 * @return void
+	 */
 	public function ajax_routes() 
 	{
 		$capability = 'manage_options';
@@ -96,6 +113,11 @@ class AdminHooks {
 	}
 
 	
+	/**
+	 * Adding a new Campaign
+	 * 
+	 * @return void
+	 */
 	public function addCampaign() 
 	{
 		if( !$_REQUEST['title']) {
@@ -130,6 +152,12 @@ class AdminHooks {
 		), 200);
 	}
 
+	
+	/**
+	 * Updating an existing Campaign
+	 * 
+	 * @return void
+	 */
 	public function updateCampaign()
 	{
 		if( !$_REQUEST['title']) {
@@ -164,6 +192,11 @@ class AdminHooks {
 	}
 
 
+	/**
+	 * Deleting a Campaign by its ID
+	 * 
+	 * @return void
+	 */
 	public function deleteCampaignByID()
 	{
 		$campaign_id = intval($_REQUEST['id']);
@@ -175,6 +208,12 @@ class AdminHooks {
 		), 200);
 	}
 
+
+	/**
+	 * Deleting a testing page by it ID
+	 * 
+	 * @return void
+	 */
 	public function deleteTestingPageByID()
 	{
 		$page_id = intval($_REQUEST['id']);
@@ -190,6 +229,11 @@ class AdminHooks {
 	}
 
 
+	/**
+	 * Getting all campaigns from database
+	 * 
+	 * @return void
+	 */
 	public function getAllCampaign() 
 	{
 		$campaigns = Queries::getAll(Helper::getDbTableName('campaigns'));
@@ -200,7 +244,13 @@ class AdminHooks {
 			'campaign' => $campaigns
 		), 200);
 	}
+
 	
+	/**
+	 * Getting a Campaign by it's ID
+	 * 
+	 * @return void
+	 */
 	public function getCampaignByID() 
 	{
 		$campaign = Queries::find(
@@ -213,6 +263,12 @@ class AdminHooks {
 		wp_send_json_success($campaign, 200);
 	}
 
+	
+	/**
+	 * Creating a testing page of a Campaign
+	 * 
+	 * @return void
+	 */
 	public function createNewTestPage() 
 	{
 		if ( ! $_REQUEST['title'] || 
@@ -256,6 +312,12 @@ class AdminHooks {
 		), 200);
 	}
 
+
+	/**
+	 * Updating an existing testing page of a campaign
+	 * 
+	 * @return void
+	 */
 	public function updateTestingPage() 
 	{
 		if ( ! $_REQUEST['title'] ||
@@ -295,6 +357,12 @@ class AdminHooks {
 		), 200);
 	}
 
+
+	/**
+	 * Getting all testing pages of a Campaign
+	 * 
+	 * @return void
+	 */
 	public function getAllTestingPage() 
 	{
 		$campaign_id = intval($_REQUEST['campaign_id']);
@@ -312,6 +380,12 @@ class AdminHooks {
 		), 200);
 	}
 
+
+	/**
+	 * Updating status of a Testing Page (e.g active <=> pending)
+	 * 
+	 * @return void
+	 */
 	public function updateTestingPageStatus() 
 	{
 		$pageId =  intval($_REQUEST['update_status']['id']);
@@ -333,6 +407,12 @@ class AdminHooks {
 		200);
 	}
 
+
+	/**
+	 * Updating status of a Campaign (e.g active <=> draft)
+	 *
+	 * @return void
+	 */
 	public function updateCampaignStatus()
 	{
 		$campaign_id = intval($_REQUEST['update_status']['id']);
@@ -353,36 +433,18 @@ class AdminHooks {
 			'message' => __('Status changed successfully', 'ninja-split-testing')), 
 		200);
 	}
-
-
-	public function getCampaignAnalyticsData()
-	{
-		$campaign_id = intval($_REQUEST['id']);
-		
-		$data = Queries::getCampaignAnalytics(
-			Helper::getDbTableName('urls'),
-			$campaign_id
-		);
-
-		wp_send_json_success(array(
-			'analyticsData' => $data
-		), 200);
-	}
-
 	
-	private function responseError($message = 'Something is wrong, Please try again') 
-	{
-		wp_send_json_error( array(
-			'message' => $message
-		), 423);
-		die();
-	}
-	
-	
+
+	/**
+	 * Getting full analytics data for a campaign
+	 *
+	 * @return void
+	 */
 	public function getAnalytics() 
 	{
 		$campaign_id = intval($_REQUEST['campaign_id']);
 		$campaign_url_id = false;
+		
 		if(isset($_REQUEST['campaign_url_id']) && !empty($_REQUEST['campaign_url_id'])) {
 			$campaign_url_id = intval($_REQUEST['campaign_url_id']);
 		}
@@ -394,7 +456,16 @@ class AdminHooks {
 		);
 		wp_send_json_success($data, 200);
 	}
+
 	
+	/**
+	 * Getting campaign statistics for every day
+	 *
+	 * @param [int] $campaign_id
+	 * @param [int] $campaign_url_id
+	 * 
+	 * @return $stats
+	 */
 	private function getCampaignDayStat($campaign_id, $campaign_url_id) {
 		$query = ninjaDB(Helper::getDbTableName('analytics'))
 			->select(array('date(created_at) as date', 'COUNT(*) as records'))
@@ -410,6 +481,14 @@ class AdminHooks {
 		return $stats;
 	}
 
+
+	/**
+	 * Getting visitor status for every pages of a campaign
+	 *
+	 * @param [int] $campaign_id
+	 * 
+	 * @return $stat
+	 */
 	private function getVisitorStatByPage($campaign_id) {
 		$stat = ninjaDB(Helper::getDbTableName('analytics'))
 					->select(array('COUNT(*) as records', 'campaign_url_id'))
@@ -419,10 +498,33 @@ class AdminHooks {
 		return $stat;
 	}
 	
+
+	/**
+	 * Getting testing pages for a specic Campaign
+	 *
+	 * @param [int] $campaign_id
+	 * 
+	 * @return void
+	 */
 	private function getPages($campaign_id) {
 		return ninjaDB(Helper::getDbTableName('urls'))
 				->where('campaign_id', $campaign_id)
 				->get();
+	}
+
+	/**
+	 * Sending Error Response with a Message
+	 * 
+	 * @param [String] $message
+	 * 
+	 * @return void
+	 */
+	private function responseError($message = 'Something is wrong, Please try again') 
+	{
+		wp_send_json_error( array(
+			'message' => $message
+		), 423);
+		die();
 	}
 	
 }
