@@ -1,7 +1,7 @@
 <template>
     <div class="nst_view_testing_page">
         <el-row v-loading="loading">
-            <div class="m-l-20 m-t-10" v-if="campaign.post_id && !loading">
+            <div class="m-t-10" v-if="campaign.post_id && !loading">
                 <el-row>
                     <el-col :span="12">
                         <h2><i class="el-icon-document"></i> Testing Pages</h2>
@@ -320,6 +320,7 @@
         },
         mounted() {
             this.fetchAllTestingPage();
+            this.$emit('setNavIndexing');
         }
     }
 </script>
