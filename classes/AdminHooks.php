@@ -30,11 +30,6 @@ class AdminHooks {
 				'admin.php?page=ninja-split-testing#/?campaign=true'
 			);
 			$submenu['ninja-split-testing'][] = array(
-				__( 'Settings', 'ninja-split-testing' ),
-				$capability,
-				'admin.php?page=ninja-split-testing#/settings'
-			);
-			$submenu['ninja-split-testing'][] = array(
 				__( 'Help', 'ninja-split-testing' ),
 				$capability,
 				'admin.php?page=ninja-split-testing#/help'
