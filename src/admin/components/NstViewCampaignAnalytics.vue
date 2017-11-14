@@ -1,18 +1,27 @@
 <template>
 	<div class="nst_view_campaign_analytics">
-		<div class="m-l-20 m-t-10">
+		<div class="m-l-20 m-t-35">
 		</div>
 		<div class="container center">
 			<el-row>
-				<el-col :span="9" v-if="trafficSplitAmount.labels.length > 0">
+				<el-col :span="8" v-if="trafficSplitAmount.labels.length > 0">
 
-					<PieChart  :data="trafficSplitAmount"></PieChart>
-					<label>Traffic Split Amount</label>
+					<PieChart  :data="trafficSplitAmount" :height="200"></PieChart>
+					<label>Pages By Traffic</label>
 				</el-col>
-				<el-col :span="9" v-if="trafficSplitAmount.labels.length > 0">
-					<PieChart  :data="visitorCount"></PieChart>
-					<label>Counting Visitor</label>
+				<el-col :span="8" v-if="visitorCount.labels.length > 0">
+					<PieChart  :data="visitorCount" :height="200"></PieChart>
+					<label>Pages By Visitor</label>
 				</el-col>
+				<el-col :span="8"  v-if="stat_by_date.labels.length > 0">
+					<BarChart :data="stat_by_date" :height="200"></BarChart>
+					<label>Visitor By Day</label>
+				</el-col>
+			</el-row>
+
+			<el-row>
+				
+				
 			</el-row>
 			
 		</div>
@@ -23,7 +32,7 @@
 <script type="text/babel">
 	import BarChart from './NstBarChart.vue';
 	import PieChart from './NstPieChart.vue';
-	import {forEach} from 'lodash';
+	import {forEach, findIndex} from 'lodash';
 	export default {
 		name: 'nst_view_campaign_analytics',
 		props: ['campaign'],
@@ -55,13 +64,13 @@
 						}
 					]
 				},
-				pageViewStatus: {
+				stat_by_date: {
 						labels: [],
 					    datasets: [
 					        {
-					          label: 'GitHub Commits',
-					          backgroundColor: '#f87979',
-					          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
+					          label: 'Visitors by day',
+					          backgroundColor: [],
+							  data: []
 					        }
 					    ]
 				}
@@ -71,19 +80,26 @@
 		methods: {
 			fetchAnalyticsData() {
 				jQuery.get(ajaxurl, {
-					action: 'routes', 
-					target_action: 'get-campaign-analytics-data',
-					id: this.campaign_id
+					action: 'nst_routes', 
+					target_action : 'get_analytics',
+					campaign_id: this.campaign_id
 				})
 	            .done((resonse) => {
-	               this.data = resonse.data.analyticsData;
-	               forEach(this.data.activePageData, (item) => {
-	               		this.trafficSplitAmount.labels.push(item.target_url);
-	               		this.visitorCount.labels.push(item.target_url);
-	               		this.trafficSplitAmount.datasets[0].data.push(item.traffic_split_amount);
-	               		this.visitorCount.datasets[0].data.push(item.visit_counts);
+	               this.data = resonse.data;
+	               forEach(this.data.visitors_by_pages, (item) => {
+	               		let index = findIndex(this.data.pages, {id: item.campaign_url_id});
+	               		this.trafficSplitAmount.labels.push(this.data.pages[index].target_url);
+	               		this.visitorCount.labels.push(this.data.pages[index].target_url);
+	               		this.trafficSplitAmount.datasets[0].data.push(this.data.pages[index].traffic_split_amount);
+	               		this.visitorCount.datasets[0].data.push(item.records);
 	               		this.trafficSplitAmount.datasets[0].backgroundColor.push('#'+Math.random().toString(16).substr(-6))
 	               		this.visitorCount.datasets[0].backgroundColor.push('#'+Math.random().toString(16).substr(-6))
+	               })
+	               forEach(this.data.stat_by_day, (item) => {
+	               		console.log(item.date)
+	                	this.stat_by_date.labels.push(item.date);
+	                	this.stat_by_date.datasets[0].data.push(item.records);
+	                	this.stat_by_date.datasets[0].backgroundColor.push('#'+Math.random().toString(16).substr(-6));
 	               })
 	            })
 	            .fail((error) => {

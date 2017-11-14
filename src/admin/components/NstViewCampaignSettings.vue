@@ -48,7 +48,7 @@
 			},
 			updateCampaign() {
 				jQuery.post(ajaxurl, {
-					action: 'routes', 
+					action: 'nst_routes', 
 					target_action: 'update-campaign',
 					id: this.campaign.id,
 					title : this.campaign.title, 

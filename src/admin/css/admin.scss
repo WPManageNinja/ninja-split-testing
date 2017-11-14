@@ -1,5 +1,10 @@
 @import "./_element_icons.css";
 
+.turn-active {
+    color: #20a0ff;
+    border-bottom: 5px solid #20a0ff;
+}
+
 .el-switch {
     .el-switch__input {
         display: none;

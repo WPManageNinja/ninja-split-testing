@@ -26,7 +26,9 @@
 
 		<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
 		  <router-link :to="{name: 'nst_home'}"> 
-		  	<el-menu-item index="1">Ninja Split Testing</el-menu-item>
+		  	<el-menu-item index="1">
+		  		Ninja Split Testing
+		  	</el-menu-item>
 		  </router-link>
 		  <router-link :to="{name: 'nst_settings'}"> 
 		  	<el-menu-item index="2">Settings</el-menu-item>
@@ -96,7 +98,7 @@
             submitNewCampaign() {
 			    
 				jQuery.post(ajaxurl, {
-					action: 'routes', 
+					action: 'nst_routes', 
 					target_action: 'add-campaign', 
 					title : this.form.title, 
 					post_id: this.selected_url.post_id,
