@@ -453,8 +453,8 @@ trait ModelTrait {
 				'table'         => $this->selected_table,
 				'statements'    => $this->statements,
 				'bindings'      => $this->bindings,
-				'sql'           => $this->getSQL(),
-				'sql_statement' => $this->getSqlStatement(),
+//				'sql'           => $this->getSQL(),
+//				'sql_statement' => $this->getSqlStatement(),
 				'outputType'    => $this->outputType
 			);
 		}
