@@ -82,7 +82,8 @@ class AdminHooks {
 			'update-testing-page'	        => 'updateTestingPage',
 			'delete-campaign-by-id'			=> 'deleteCampaignByID',
 			'delete-testing-page-by-id'		=> 'deleteTestingPageByID',
-			'get-campaign-analytics-data'	=> 'getCampaignAnalyticsData'
+			'get-campaign-analytics-data'	=> 'getCampaignAnalyticsData',
+			'get_analytics' => 'getAnalytics'
 		);
 
 		$requested_route = $_REQUEST['target_action'];
@@ -166,13 +167,9 @@ class AdminHooks {
 	public function deleteCampaignByID()
 	{
 		$campaign_id = intval($_REQUEST['id']);
-		
 		do_action('nst_before_campaign_delete', $campaign_id);
-
-		Queries::deleteCampaign($campaign_id);
-
+		Queries::delete('nst_campaigns', $campaign_id);
 		do_action('nst_after_campaign_deleted', $campaign_id);
-
 		wp_send_json_success(array(
 			'message' => __('Campaign deleted successfully', 'ninja-split-testing')
 		), 200);
@@ -361,7 +358,7 @@ class AdminHooks {
 	public function getCampaignAnalyticsData()
 	{
 		$campaign_id = intval($_REQUEST['id']);
-
+		
 		$data = Queries::getCampaignAnalytics(
 			Helper::getDbTableName('urls'),
 			$campaign_id
@@ -379,6 +376,53 @@ class AdminHooks {
 			'message' => $message
 		), 423);
 		die();
+	}
+	
+	
+	public function getAnalytics() 
+	{
+		$campaign_id = intval($_REQUEST['campaign_id']);
+		$campaign_url_id = false;
+		if(isset($_REQUEST['campaign_url_id']) && !empty($_REQUEST['campaign_url_id'])) {
+			$campaign_url_id = intval($_REQUEST['campaign_url_id']);
+		}
+		
+		$data = array(
+			'visitors_by_pages' => $this->getVisitorStatByPage($campaign_id),
+			'stat_by_day' => $this->getCampaignDayStat($campaign_id, $campaign_url_id),
+			'pages' => $this->getPages($campaign_id)
+		);
+		wp_send_json_success($data, 200);
+	}
+	
+	private function getCampaignDayStat($campaign_id, $campaign_url_id) {
+		$query = ninjaDB(Helper::getDbTableName('analytics'))
+			->select(array('date(created_at) as date', 'COUNT(*) as records'))
+			->where('campaign_id', $campaign_id);
+		
+		if($campaign_url_id) {
+			$query->where('campaign_url_id', $campaign_url_id);
+		}
+		
+		$stats = $query->groupBy('date(created_at)')
+			->get();
+		
+		return $stats;
+	}
+
+	private function getVisitorStatByPage($campaign_id) {
+		$stat = ninjaDB(Helper::getDbTableName('analytics'))
+					->select(array('COUNT(*) as records', 'campaign_url_id'))
+					->where('campaign_id', $campaign_id)
+					->groupBy('campaign_url_id')
+					->get();
+		return $stat;
+	}
+	
+	private function getPages($campaign_id) {
+		return ninjaDB(Helper::getDbTableName('urls'))
+				->where('campaign_id', $campaign_id)
+				->get();
 	}
 	
 }
