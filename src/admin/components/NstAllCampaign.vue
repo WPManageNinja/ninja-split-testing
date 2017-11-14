@@ -81,7 +81,7 @@
 			},
 			confirmDeleteCampaign() {
 				jQuery.get(ajaxurl, {
-					action: 'routes', 
+					action: 'nst_routes', 
 					target_action: 'delete-campaign-by-id',
 					id: this.deleteCampaignId
 				})
@@ -101,7 +101,7 @@
 			fetchCampaignData() {
 
 				jQuery.get(ajaxurl, {
-					action: 'routes', 
+					action: 'nst_routes', 
 					target_action: 'get-all-campaign' 
 				})
                 .done((res) => {
@@ -118,7 +118,7 @@
 
 			campaignStatusChanged(id, status) {
 				jQuery.get(ajaxurl, {
-                    action: 'routes',
+                    action: 'nst_routes',
                     target_action: 'update-campaign-status',
                     update_status: {
                         id: id,

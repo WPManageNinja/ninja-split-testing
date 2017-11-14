@@ -60,7 +60,12 @@
                     </el-col>
                 </el-row>
                 <div v-show="!testing_pages.length" class="messages">
-                    <p>You don't have any test pages. Please few more</p>
+                    <el-alert
+                        title="You don't have any test pages. Please few more"
+                        type="warning"
+                        show-icon
+                        :closable="false">
+                    </el-alert>
                 </div>
             </div>
         </el-row>
@@ -170,7 +175,7 @@
         methods: {
             fetchAllTestingPage() {
                 jQuery.get(ajaxurl, {
-                    action: 'routes',
+                    action: 'nst_routes',
                     target_action: 'get-all-testing-page',
                     campaign_id: this.campaign_id
                 })
@@ -199,7 +204,7 @@
             },
             addNewTest() {
                 jQuery.post(ajaxurl, {
-                    action: 'routes',
+                    action: 'nst_routes',
                     target_action: 'store-campaign-testing-page',
                     title: this.current_working_test.title,
                     target_post_id: this.selected_url.post_id,
@@ -235,7 +240,7 @@
             },
             updateTest() {
                 jQuery.post(ajaxurl, {
-                    action: 'routes',
+                    action: 'nst_routes',
                     target_action: 'update-testing-page',
                     title: this.current_working_test.title,
                     target_post_id: this.selected_url.post_id,
@@ -263,7 +268,7 @@
             },
             testingPageStatusChanged(id, status) {
                 jQuery.get(ajaxurl, {
-                    action: 'routes',
+                    action: 'nst_routes',
                     target_action: 'update-testing-page-status',
                     update_status: {
                         id: id,
@@ -294,7 +299,7 @@
 
             deletePageBy(id) {
                 jQuery.get(ajaxurl, {
-                    action: 'routes',
+                    action: 'nst_routes',
                     target_action: 'delete-testing-page-by-id',
                     id: id
                 })

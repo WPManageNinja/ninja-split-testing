@@ -103,7 +103,7 @@
 			},
 			updateCampaign() {
 				jQuery.post(ajaxurl, {
-					action: 'routes', 
+					action: 'nst_routes', 
 					target_action: 'update-campaign',
 					id: this.campaign_data.id,
 					title : this.campaign_data.title, 
@@ -133,7 +133,7 @@
 			},
 			fetchCampaignData() {
 				jQuery.get(ajaxurl,{
-					action:'routes',
+					action:'nst_routes',
 					target_action: 'get-campaign-by-id',
 					campaign_id: this.$route.params.id
 				})
