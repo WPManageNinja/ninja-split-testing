@@ -7,7 +7,14 @@
 		</el-row>
 		<hr>
 		<div class="container center">
-			<el-row>
+			<el-row class="m-t-35">
+				<el-col :span="12"  v-if="stat_by_date.labels.length > 0" class="center">
+					<BarChart :data="stat_by_date" :height="300"></BarChart>
+					<label>Visitor By Day</label>
+				</el-col>
+			</el-row>
+
+			<el-row class="m-t-35"> 
 				<el-col :offset="2" :span="8" v-if="trafficSplitAmount.labels.length > 0">
 					<PieChart  :data="trafficSplitAmount" :height="300"></PieChart>
 					<label>Pages By Traffic</label>
@@ -18,12 +25,7 @@
 				</el-col>
 			</el-row>
 
-			<el-row class="m-t-35">
-				<el-col :offset="3" :span="12"  v-if="stat_by_date.labels.length > 0" class="center">
-					<BarChart :data="stat_by_date" :height="300"></BarChart>
-					<label>Visitor By Day</label>
-				</el-col>
-			</el-row>
+			
 			
 		</div>
 	</div>
