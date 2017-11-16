@@ -2,7 +2,7 @@
 
 namespace  NinjaABClass\classes;
 
-class Queries
+class NstQueries
 {
 	/**
 	 * Inserting data into given table of a database

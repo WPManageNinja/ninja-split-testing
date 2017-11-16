@@ -139,7 +139,7 @@ class AdminHooks {
 
 		$campaign_data = apply_filters('nst_create_new_campaign', $campaign_data);
 		
-		$campaignId = Queries::insert(
+		$campaignId = NstQueries::insert(
 			Helper::getDbTableName('campaigns'), 
 			$campaign_data
 		);
@@ -178,7 +178,7 @@ class AdminHooks {
 		
 		$campaign_data = apply_filters('nst_update_campaign_data', $campaign_data, $campaign_id);
 		
-		$result = Queries::update(
+		$result = NstQueries::update(
 			Helper::getDbTableName('campaigns'), 
 			$campaign_data, 
 			$campaign_id
@@ -201,8 +201,9 @@ class AdminHooks {
 	{
 		$campaign_id = intval($_REQUEST['id']);
 		do_action('nst_before_campaign_delete', $campaign_id);
-		Queries::delete('nst_campaigns', $campaign_id);
+		NstQueries::delete('nst_campaigns', $campaign_id);
 		do_action('nst_after_campaign_deleted', $campaign_id);
+
 		wp_send_json_success(array(
 			'message' => __('Campaign deleted successfully', 'ninja-split-testing')
 		), 200);
@@ -218,7 +219,7 @@ class AdminHooks {
 	{
 		$page_id = intval($_REQUEST['id']);
 
-		Queries::delete(
+		NstQueries::delete(
 			Helper::getDbTableName('urls'), 
 			$page_id
 		);
@@ -236,7 +237,9 @@ class AdminHooks {
 	 */
 	public function getAllCampaign() 
 	{
-		$campaigns = Queries::getAll(Helper::getDbTableName('campaigns'));
+		$campaigns = NstQueries::getAll(
+			Helper::getDbTableName('campaigns')
+		);
 
 		$campaigns = apply_filters('nst_all_campaigns', $campaigns);
 
@@ -253,7 +256,7 @@ class AdminHooks {
 	 */
 	public function getCampaignByID() 
 	{
-		$campaign = Queries::find(
+		$campaign = NstQueries::find(
 			Helper::getDbTableName('campaigns'), 
 			intval($_REQUEST['campaign_id'])
 		);
@@ -293,14 +296,14 @@ class AdminHooks {
 		
 		$page_data = apply_filters('nst_insert_campaign_page', $page_data );
 		
-		$pageId = Queries::insert(
+		$pageId = NstQueries::insert(
 			Helper::getDbTableName('urls'), 
 			$page_data
 		);
 		
 		do_action('nst_created_new_campaign_page', $campaign_id, $pageId );
 		
-		$campaign_page = Queries::find(
+		$campaign_page = NstQueries::find(
 			Helper::getDbTableName('urls'), 
 			$pageId
 		);
@@ -343,7 +346,7 @@ class AdminHooks {
 		
 		$page_data = apply_filters('nst_update_campaign_page_data', $page_data, $campaign_id);
 
-		$pageId = Queries::update(
+		$pageId = NstQueries::update(
 			Helper::getDbTableName('urls'), 
 			$page_data, 
 			$page_id
@@ -367,7 +370,7 @@ class AdminHooks {
 	{
 		$campaign_id = intval($_REQUEST['campaign_id']);
 
-		$pages = Queries::get_where(
+		$pages = NstQueries::get_where(
 			Helper::getDbTableName('urls'), 
 			'campaign_id', 
 			$campaign_id
@@ -394,7 +397,7 @@ class AdminHooks {
 		);
 		$updateData = apply_filters('nst_update_page_status', $updateData, $pageId);
 		
-		Queries::update(
+		NstQueries::update(
 			Helper::getDbTableName('urls'),
 			$updateData,
 			$pageId
@@ -421,7 +424,7 @@ class AdminHooks {
 		);
 		$update_data = apply_filters('nst_update_campaign_status_data', $update_data, $campaign_id );
 		
-		Queries::update(
+		NstQueries::update(
 			Helper::getDbTableName('campaigns'),
 			$update_data,
 			$campaign_id
